@@ -1,0 +1,802 @@
+{
+  "recon_run_at": "2026-04-19T04:51:30.807002+00:00",
+  "total_source_urls": 55,
+  "entries": [
+    {
+      "source_url": "https://substack.com/redirect/4dd26896-69a5-4ff7-bd53-3a9a86f0a7ca?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260405_abp_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/4dd26896-69a5-4ff7-bd53-3a9a86f0a7ca?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260405_abp_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/4e49c9fa-7d00-4acb-afae-cf10ac156099?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/4e49c9fa-7d00-4acb-afae-cf10ac156099?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/9a8dcefe-0f6a-46de-8072-6f471b6c5555?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260331_6ro_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/9a8dcefe-0f6a-46de-8072-6f471b6c5555?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260331_6ro_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/4ecf5920-e4fb-4565-abd2-d9da7647fae3?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/4ecf5920-e4fb-4565-abd2-d9da7647fae3?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/dca07717-09c5-4a22-839c-5abb8694ae43?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/dca07717-09c5-4a22-839c-5abb8694ae43?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/a3a8ee33-fbd2-4b25-aca5-6bc754077fc8?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/a3a8ee33-fbd2-4b25-aca5-6bc754077fc8?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/5e365316-6636-463e-852f-1cdca0334e2d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260326_o81_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/5e365316-6636-463e-852f-1cdca0334e2d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260326_o81_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/3b4bf65f-fea6-495f-ba52-4187c4298c9a?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260331_oom_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/3b4bf65f-fea6-495f-ba52-4187c4298c9a?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260331_oom_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/4610dc40-11b2-487f-af23-bd1d8b30b8a6?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260331_lm7_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/4610dc40-11b2-487f-af23-bd1d8b30b8a6?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260331_lm7_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/2c1adabf-eeeb-4773-bca8-16a3e20d0801?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260405_zxa_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/2c1adabf-eeeb-4773-bca8-16a3e20d0801?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260405_zxa_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/00c1ddef-9c53-4d7b-a9b3-98b082e8e862?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260328_0r0_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/00c1ddef-9c53-4d7b-a9b3-98b082e8e862?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260328_0r0_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/ee74e017-d678-40bc-97d9-4239d4a1902b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260326_ken_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/ee74e017-d678-40bc-97d9-4239d4a1902b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260326_ken_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/1fbc065e-edea-4e3a-9ab3-4a1d340fd299?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260331_6yc_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/1fbc065e-edea-4e3a-9ab3-4a1d340fd299?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260331_6yc_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/9cf955e4-2ab3-4e56-b142-30f5c14ee2c5?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260330_161_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/9cf955e4-2ab3-4e56-b142-30f5c14ee2c5?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260330_161_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/2e0a9668-4fe2-4d8d-bb1b-bd8264010b1e?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260330_4ip_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/2e0a9668-4fe2-4d8d-bb1b-bd8264010b1e?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260330_4ip_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/efd89114-2a97-4ccf-bd3d-5eb0e105655d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260325_z8h_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/efd89114-2a97-4ccf-bd3d-5eb0e105655d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260325_z8h_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/9f6e390f-6071-42dc-9a55-0973f8b80b10?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260324_kyk_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/9f6e390f-6071-42dc-9a55-0973f8b80b10?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260324_kyk_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/fca20add-7b55-43d3-9bc4-c871431584d3?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/fca20add-7b55-43d3-9bc4-c871431584d3?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/f479fe9a-6a1b-49be-a8a2-7429704c6db1?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260323_ltg_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/f479fe9a-6a1b-49be-a8a2-7429704c6db1?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260323_ltg_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/b18c0675-e276-45e3-b9ae-b4523ff4fae8?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260322_jhq_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/b18c0675-e276-45e3-b9ae-b4523ff4fae8?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260322_jhq_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/c887a250-b489-41db-9b1f-94f0aa87c542?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260321_gfr_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/c887a250-b489-41db-9b1f-94f0aa87c542?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260321_gfr_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/c7588150-1e4a-47c1-b5ab-6b30b4ea5a7d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260321_hgt_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/c7588150-1e4a-47c1-b5ab-6b30b4ea5a7d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260321_hgt_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/ffdc8337-3b87-46ae-a7a3-35970e8b5d23?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260320_426_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/ffdc8337-3b87-46ae-a7a3-35970e8b5d23?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260320_426_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/8380df41-3d39-4f27-994f-3a759fba8de7?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260310_uv6_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/8380df41-3d39-4f27-994f-3a759fba8de7?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260310_uv6_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/1ad3a9e3-d5a9-4f89-bf8c-1dcb2b576779?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/1ad3a9e3-d5a9-4f89-bf8c-1dcb2b576779?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/7c3c0495-c2f1-49de-add3-f8b85aca94db?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260302_a4w_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/7c3c0495-c2f1-49de-add3-f8b85aca94db?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260302_a4w_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/7a0a7640-430f-4cc5-9adf-cb44b5acc2d7?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260305_v1m_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/7a0a7640-430f-4cc5-9adf-cb44b5acc2d7?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260305_v1m_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/37358574-a1e7-442b-acf5-50b6243e556f?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260310_usk_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/37358574-a1e7-442b-acf5-50b6243e556f?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260310_usk_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/9678e6b1-96d6-44a0-b225-ec20652697c6?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260310_unn_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/9678e6b1-96d6-44a0-b225-ec20652697c6?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260310_unn_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/e596acb1-0564-4caa-a36f-56e0ee3a822b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260305_572_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/e596acb1-0564-4caa-a36f-56e0ee3a822b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260305_572_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/98222db6-86a6-4ed6-8692-c3bb528c0515?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/98222db6-86a6-4ed6-8692-c3bb528c0515?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/181ce34b-41ef-4f6c-981e-52cbc50f425c?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260305_442_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/181ce34b-41ef-4f6c-981e-52cbc50f425c?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260305_442_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/31ef832a-7392-453d-a0f7-771f962df0b2?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260305_622_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/31ef832a-7392-453d-a0f7-771f962df0b2?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260305_622_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/040d3197-6f36-4bbe-9ddf-d2911cfac127?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/040d3197-6f36-4bbe-9ddf-d2911cfac127?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/276eef15-60ad-49aa-bd7a-a2c9b37f3403?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260225_pbh_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/276eef15-60ad-49aa-bd7a-a2c9b37f3403?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260225_pbh_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/0187cfbb-f2f2-4b64-90bc-e43e2503dfa1?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260306_bol_promptkit_substack?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/0187cfbb-f2f2-4b64-90bc-e43e2503dfa1?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260306_bol_promptkit_substack?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/e7fa6c52-ad26-4089-a586-94650ece283b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260302_d7l_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/e7fa6c52-ad26-4089-a586-94650ece283b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260302_d7l_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/eaa95324-71ea-49bf-ad27-7343b6c1b90b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260302_y37_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/eaa95324-71ea-49bf-ad27-7343b6c1b90b?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260302_y37_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/55c8a940-9274-4311-aa6f-69d9cc796fec?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260302_t1f_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/55c8a940-9274-4311-aa6f-69d9cc796fec?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260302_t1f_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/31e6be19-e58f-4212-bc6f-ae71cf1562af?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260302_23t_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/31e6be19-e58f-4212-bc6f-ae71cf1562af?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260302_23t_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/e6f611e0-7f92-4196-b4ed-05b9152a8327?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/e6f611e0-7f92-4196-b4ed-05b9152a8327?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/373cdaf4-ae06-4202-9745-4da55c19f730?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260213_alf_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/373cdaf4-ae06-4202-9745-4da55c19f730?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260213_alf_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/10d63d91-629e-48dd-a126-ec5ab27a326e?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260225_hfy_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/10d63d91-629e-48dd-a126-ec5ab27a326e?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260225_hfy_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/7577fe95-a33b-4c64-98f1-98a4d8b11e41?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260224_73n_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/7577fe95-a33b-4c64-98f1-98a4d8b11e41?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260224_73n_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/cc475272-6638-496f-b660-d91106f3df9d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260223_wzm_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/cc475272-6638-496f-b660-d91106f3df9d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260223_wzm_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/83fdd789-6708-48e3-a3eb-5310919408e0?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260214_b63_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/83fdd789-6708-48e3-a3eb-5310919408e0?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260214_b63_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/d4df32ca-70ba-4200-8649-bccd24f1bcdc?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/d4df32ca-70ba-4200-8649-bccd24f1bcdc?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.heypresto.ai/?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.heypresto.ai",
+      "classification": "sponsor_heypresto",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/cba94a14-0e3a-41bb-8373-05313d5d9e48?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260213_3ox_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/cba94a14-0e3a-41bb-8373-05313d5d9e48?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260213_3ox_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/d2aaeb9c-afe4-4993-be93-1cb7f8e38c1a?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260213_d03_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/d2aaeb9c-afe4-4993-be93-1cb7f8e38c1a?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260213_d03_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/84352506-408e-4ba3-bc79-c265f3725b6d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260213_1bk_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/84352506-408e-4ba3-bc79-c265f3725b6d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260213_1bk_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/e7040f85-4a48-47a6-9960-95cb6a7cb777?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260213_ph6_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/e7040f85-4a48-47a6-9960-95cb6a7cb777?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260213_ph6_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/ca44f8d1-51ba-46e9-864b-23c0c3e40819?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260216_vpl_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/ca44f8d1-51ba-46e9-864b-23c0c3e40819?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260216_vpl_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/761bff90-0655-483f-868a-b06099235e30?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://promptkit.natebjones.com/20260213_gdr_promptkit_1?utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/761bff90-0655-483f-868a-b06099235e30?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://promptkit.natebjones.com/20260213_gdr_promptkit_1?utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "promptkit.natebjones.com",
+      "classification": "promptkit_natebjones",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/7d703d74-bebb-4182-bab7-856fc09fcb6d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.notion.so/product-templates/Infrastructure-Inversion-Prompt-Pack-3055a2ccb526808f87f5e0136e464fb9?source=copy_link&utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/7d703d74-bebb-4182-bab7-856fc09fcb6d?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.notion.so/product-templates/Infrastructure-Inversion-Prompt-Pack-3055a2ccb526808f87f5e0136e464fb9?source=copy_link&utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.notion.so",
+      "classification": "notion_page",
+      "auth_gated": false,
+      "error": null
+    },
+    {
+      "source_url": "https://substack.com/redirect/d093941b-aebd-4988-9417-7b4b2670671e?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+      "final_url": "https://www.notion.so/product-templates/From-Operating-Models-to-Board-Decks-in-Minutes-3035a2ccb526803f96daeaab4a7e773f?source=copy_link&utm_source=substack&utm_medium=email",
+      "redirect_chain": [
+        "https://substack.com/redirect/d093941b-aebd-4988-9417-7b4b2670671e?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+        "https://www.notion.so/product-templates/From-Operating-Models-to-Board-Decks-in-Minutes-3035a2ccb526803f96daeaab4a7e773f?source=copy_link&utm_source=substack&utm_medium=email"
+      ],
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "final_domain": "www.notion.so",
+      "classification": "notion_page",
+      "auth_gated": false,
+      "error": null
+    }
+  ],
+  "dedupe": {
+    "unique_count": 46,
+    "dupe_groups": [
+      {
+        "final_url": "https://www.heypresto.ai/?utm_source=substack&utm_medium=email",
+        "source_urls": [
+          "https://substack.com/redirect/4e49c9fa-7d00-4acb-afae-cf10ac156099?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/4ecf5920-e4fb-4565-abd2-d9da7647fae3?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/dca07717-09c5-4a22-839c-5abb8694ae43?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/a3a8ee33-fbd2-4b25-aca5-6bc754077fc8?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/fca20add-7b55-43d3-9bc4-c871431584d3?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/1ad3a9e3-d5a9-4f89-bf8c-1dcb2b576779?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/98222db6-86a6-4ed6-8692-c3bb528c0515?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/040d3197-6f36-4bbe-9ddf-d2911cfac127?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/e6f611e0-7f92-4196-b4ed-05b9152a8327?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk",
+          "https://substack.com/redirect/d4df32ca-70ba-4200-8649-bccd24f1bcdc?j=eyJ1IjoiNzVrYXpwIn0.fEzXR6uUvHx4JW6_EjpC0WR0fGaIFxM2W1KvQ0uTGGk"
+        ],
+        "count": 10
+      }
+    ]
+  },
+  "classification_counts": {
+    "promptkit_natebjones": 43,
+    "sponsor_heypresto": 10,
+    "notion_page": 2
+  }
+}
