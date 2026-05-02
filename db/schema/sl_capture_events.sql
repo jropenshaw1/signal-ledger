@@ -77,14 +77,19 @@ CREATE TABLE IF NOT EXISTS sl_capture_events (
     -- ------------------------------------------------------------------
     -- Constraints
     -- ------------------------------------------------------------------
+    -- event_type: 7 pipeline-stage types defined in Functional Spec §3.
+    -- Classifies the pipeline action that produced this event (stage, not method).
+    -- Capture method is carried by ingestion_source on the same row.
+    -- Updated from pre-spec taxonomy in migration 001 (2026-05-01).
     CONSTRAINT ck_sce_event_type
         CHECK (event_type IN (
-            'web-ingest',
-            'email-backfill',
-            'retry',
-            'enrichment',
-            'supersession',
-            'audit-detection'
+            'ingestion_started',
+            'ingestion_succeeded',
+            'ingestion_failed',
+            'embedding_queued',
+            'embedding_succeeded',
+            'embedding_failed',
+            'retry_attempted'
         )),
 
     CONSTRAINT ck_sce_event_status

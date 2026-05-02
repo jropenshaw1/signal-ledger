@@ -170,6 +170,19 @@ CREATE TABLE IF NOT EXISTS sl_articles (
     updated_at              timestamptz NOT NULL DEFAULT now(),
 
     -- ------------------------------------------------------------------
+    -- Embedding pipeline lifecycle
+    -- Nullable by design: preview-only articles (no body_text) never
+    -- receive an embedding and carry NULL throughout their lifetime.
+    -- complete/partial articles receive 'pending' via explicit UPDATE
+    -- after article commit (Functional Spec v1.0 Appendix A, step 5).
+    -- State machine: pending → processing → complete | failed.
+    -- 3 total attempts: Attempt 1 → wait 2s → Attempt 2 → wait 8s →
+    -- Attempt 3 → terminal. Managed entirely by the async embedding worker.
+    -- Functional Spec v1.0 §2; migration 001; 2026-05-01.
+    -- ------------------------------------------------------------------
+    embedding_status        text,
+
+    -- ------------------------------------------------------------------
     -- Constraints
     -- ------------------------------------------------------------------
     CONSTRAINT ck_sla_content_type
@@ -229,6 +242,23 @@ CREATE TABLE IF NOT EXISTS sl_articles (
     CONSTRAINT ck_sla_embedding_requires_body
         CHECK (embedding IS NULL OR body_text IS NOT NULL),
 
+    -- embedding_status value domain (Functional Spec §2)
+    CONSTRAINT ck_sla_embedding_status
+        CHECK (
+            embedding_status IS NULL
+            OR embedding_status IN ('pending', 'processing', 'complete', 'failed')
+        ),
+
+    -- Coherence: embedding vector present → pipeline completed successfully.
+    -- 'complete' is the only valid terminal-success state.
+    CONSTRAINT ck_sla_embedding_status_complete
+        CHECK (embedding IS NULL OR embedding_status = 'complete'),
+
+    -- Coherence: preview-only rows have NULL body_text; embedding never applies.
+    -- 'pending' on a preview-only row is a logic error, not a deferred state.
+    CONSTRAINT ck_sla_embedding_status_preview_null
+        CHECK (capture_completeness != 'preview-only' OR embedding_status IS NULL),
+
     -- One canonical article per provider per title per published date.
     -- Prevents duplicate ingestion of the same article.
     CONSTRAINT uq_sla_provider_title_date
@@ -254,6 +284,13 @@ CREATE INDEX IF NOT EXISTS idx_sla_published_date
 -- Composite for filtered retrieval by provider and content type.
 CREATE INDEX IF NOT EXISTS idx_sla_provider_content_type
     ON sl_articles (provider_id, content_type);
+
+-- Partial index covering only rows the embedding worker queries.
+-- 'complete' rows excluded — they need no further action.
+-- 'processing' included to support stale-processing recovery sweeps.
+CREATE INDEX IF NOT EXISTS idx_sla_embedding_status
+    ON sl_articles (embedding_status, updated_at)
+    WHERE embedding_status IN ('pending', 'processing', 'failed');
 
 -- B-tree on capture_completeness for audit queries.
 CREATE INDEX IF NOT EXISTS idx_sla_capture_completeness
@@ -300,6 +337,15 @@ COMMENT ON COLUMN sl_articles.embedding IS
     'Precision retrieval goes through sl_signpost_embeddings. '
     'Null until embedding pipeline runs. Provenance fields '
     '(embedding_model, embedding_version, content_hash) travel with it.';
+
+COMMENT ON COLUMN sl_articles.embedding_status IS
+    'Async embedding pipeline lifecycle state. '
+    'NULL for preview-only articles (no body_text → embedding never applies). '
+    'State machine: pending → processing → complete | failed. '
+    '3 total attempts: Attempt 1 → wait 2s → Attempt 2 → wait 8s → Attempt 3 → terminal. '
+    'Set to ''pending'' by application after article commit (Appendix A, step 5). '
+    'Advanced by the async embedding worker. '
+    'Functional Spec v1.0 §2; migration 001; 2026-05-01.';
 
 COMMENT ON COLUMN sl_articles.published_date IS
     'Date of original publication. Immutable provenance (Charter P3). '
