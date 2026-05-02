@@ -149,3 +149,45 @@ export interface ErrorEnvelope {
 }
 
 export type ApiResponse<T> = SuccessEnvelope<T> | ErrorEnvelope;
+
+// ---------------------------------------------------------------------------
+// Gap window types (Functional Spec §7, sl_provider_records.gap_windows JSONB)
+// ---------------------------------------------------------------------------
+
+/** Resolution status lifecycle: open/pending → acknowledged → resolved | unresolvable */
+export type GapResolutionStatus = 'open' | 'pending' | 'acknowledged' | 'resolved' | 'unresolvable';
+
+/** Terminal states — sl_resolve_gap_window only transitions TO these. */
+export type GapTerminalStatus = 'resolved' | 'unresolvable';
+
+export type GapResolutionPath = 'web' | 'email-backfill' | 'none';
+
+/** JSONB entry shape for sl_provider_records.gap_windows array elements. */
+export interface GapWindowEntry {
+  gap_start:                string;                    // YYYY-MM-DD
+  gap_end:                  string;                    // YYYY-MM-DD
+  article_count_estimated:  number | null;
+  resolution_status:        GapResolutionStatus;
+  resolution_path:          GapResolutionPath | null;
+  resolution_notes?:        string | null;             // Spec §7
+  last_updated?:            string;                    // ISO8601 — set on every mutation
+}
+
+/** Input shape for sl_resolve_gap_window edge function. */
+export interface ResolveGapWindowInput {
+  provider_id:        string;              // uuid
+  gap_start:          string;              // YYYY-MM-DD
+  gap_end:            string;              // YYYY-MM-DD
+  resolution_status:  GapTerminalStatus;
+  resolution_path:    GapResolutionPath;
+  notes?:             string;
+}
+
+/** Output shape for sl_resolve_gap_window. */
+export interface ResolveGapWindowOutput {
+  provider_id:        string;
+  gap_start:          string;
+  gap_end:            string;
+  resolution_status:  GapTerminalStatus;
+  resolution_path:    GapResolutionPath;
+}

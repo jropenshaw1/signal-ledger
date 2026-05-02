@@ -21,14 +21,20 @@
 //   - retry_of_event_id passed as formal column on ingestion_started event
 //   - event_notes no longer carries retry linkage (moved to formal column)
 //
+// Step 7 scope:
+//   - gap_window_id parsed as "{YYYY-MM-DD}_{YYYY-MM-DD}" compound key
+//   - on successful ingestion, resolves matching gap window via optimistic lock
+//   - gap resolution is non-fatal: failure logged but does not block ingestion
+//
 // Step 2 explicit defers (not bugs — intentional scope boundaries):
 //   - web ingestion (ingestion_source = 'web'): returns 501 — future step
 //   - retry chain enforcement (retry_of_event_id): formal column — Step 6
-//   - gap window resolution (gap_window_id): accepted, gap_resolved=false — Step 7
+//   - gap window resolution (gap_window_id): resolved on success — Step 7
 //   - structured observability fields (duration_ms): Step 8
 // =============================================================================
 
 import { writeCaptureEvent }                  from '../_shared/capture_events.ts';
+import { resolveGapWindow }                    from '../_shared/gap_windows.ts';
 import { mapErrorToCode, buildErrorMessage }  from '../_shared/error_mapper.ts';
 import { normalizeText, sha256Hex }            from '../_shared/hash.ts';
 import { successResponse, errorResponse,
@@ -488,6 +494,50 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
   // [Appendix A step 6] Provider record update (non-fatal)
   await updateProviderRecord(input.provider_id);
 
+  // -------------------------------------------------------------------------
+  // [Step 7] Gap window resolution (non-fatal)
+  // If gap_window_id is supplied and ingestion succeeded, resolve the gap.
+  // gap_window_id format: "{YYYY-MM-DD}_{YYYY-MM-DD}" (gap_start_gap_end).
+  // Resolution failure is logged but never blocks the ingestion response.
+  // -------------------------------------------------------------------------
+  let gapResolved = false;
+
+  if (input.gap_window_id) {
+    const parts = input.gap_window_id.split('_');
+    const gapStart = parts[0];
+    const gapEnd   = parts[1];
+
+    if (gapStart && gapEnd && /^\d{4}-\d{2}-\d{2}$/.test(gapStart) && /^\d{4}-\d{2}-\d{2}$/.test(gapEnd)) {
+      const gapResult = await resolveGapWindow(
+        input.provider_id,
+        gapStart,
+        gapEnd,
+        'resolved',
+        input.ingestion_source === 'web' ? 'web' : 'email-backfill',
+      );
+
+      if (gapResult.success) {
+        gapResolved = true;
+        console.info('[sl_ingest_article] gap window resolved', {
+          article_id,
+          gap_start: gapStart,
+          gap_end:   gapEnd,
+        });
+      } else {
+        console.warn('[sl_ingest_article] gap window resolution failed (non-fatal)', {
+          article_id,
+          gap_window_id: input.gap_window_id,
+          reason:        gapResult.reason,
+          message:       gapResult.message,
+        });
+      }
+    } else {
+      console.warn('[sl_ingest_article] gap_window_id format invalid (expected YYYY-MM-DD_YYYY-MM-DD)', {
+        gap_window_id: input.gap_window_id,
+      });
+    }
+  }
+
   // Return ingestion_succeeded event_id as the canonical reference
   const outputStatus: IngestArticleOutput['status'] =
     completeness === 'preview-only' ? 'preview-only'
@@ -499,7 +549,7 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
     event_id:             succeededEventId ?? embeddingEventId ?? startedEventId ?? '',
     capture_completeness: completeness,
     status:               outputStatus,
-    gap_resolved:         false, // Step 7
+    gap_resolved:         gapResolved,
   });
 }
 
