@@ -62,6 +62,14 @@ CREATE TABLE IF NOT EXISTS sl_capture_events (
     -- ------------------------------------------------------------------
     retry_count             integer     NOT NULL DEFAULT 0,
 
+    -- Formal retry chain lineage (Step 6, Functional Spec §5).
+    -- FK to the prior capture event this event retries.
+    -- Stage-agnostic: any event_type may carry it.
+    -- App-layer guard: retry_attempted event_type requires non-null.
+    retry_of_event_id       uuid
+                                        REFERENCES sl_capture_events (event_id)
+                                        ON DELETE RESTRICT,
+
     -- Raw diagnostic detail from the pipeline at time of event.
     raw_error               text,
 
@@ -134,6 +142,10 @@ CREATE TABLE IF NOT EXISTS sl_capture_events (
     CONSTRAINT ck_sce_retry_count_non_negative
         CHECK (retry_count >= 0),
 
+    -- Self-reference guard — an event cannot retry itself. Step 6.
+    CONSTRAINT ck_sce_retry_not_self
+        CHECK (retry_of_event_id IS NULL OR retry_of_event_id <> event_id),
+
     -- failure_category binding by status.
     -- success, resolved      → must be NULL (clean outcomes carry no failure category).
     -- failed, partial,
@@ -173,6 +185,11 @@ CREATE INDEX IF NOT EXISTS idx_sce_event_status
 CREATE INDEX IF NOT EXISTS idx_sce_source_vs_system
     ON sl_capture_events (source_vs_system_classification);
 
+-- Retry chain traversal (Step 6).
+CREATE INDEX IF NOT EXISTS idx_sce_retry_of_event
+    ON sl_capture_events (retry_of_event_id)
+    WHERE retry_of_event_id IS NOT NULL;
+
 -- =============================================================================
 -- RLS placeholder
 -- =============================================================================
@@ -197,3 +214,9 @@ COMMENT ON COLUMN sl_capture_events.source_vs_system_classification IS
 COMMENT ON COLUMN sl_capture_events.article_id IS
     'Null when capture failed before an article row was created. '
     'ON DELETE SET NULL preserves the event record if the article is later deleted.';
+
+COMMENT ON COLUMN sl_capture_events.retry_of_event_id IS
+    'FK to the prior capture event this event retries. Stage-agnostic lineage '
+    'edge — any event_type may carry it. Self-reference is prohibited by '
+    'ck_sce_retry_not_self. Full chain traceability via recursive CTE on '
+    '(event_id, retry_of_event_id). Step 6, Functional Spec §5.';

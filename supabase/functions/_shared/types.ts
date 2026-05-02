@@ -70,6 +70,14 @@ export interface ContentPayload {
   published_date:       string;            // YYYY-MM-DD
   capture_completeness: CaptureCompleteness;
   body_text?:           string;            // null/absent iff capture_completeness = preview-only
+  /**
+   * RFC 2822 Message-ID header value from the source email.
+   * When present, the ingest function stores external_id = 'email:<message_id>'.
+   * When absent, falls back to 'email_hash:<sha256(normalized_title+body)>',
+   * or NULL for preview-only records without body_text.
+   * Step 4 — idempotency key enforcement on (provider_id, external_id).
+   */
+  message_id?:          string;
 }
 
 export interface IngestArticleInput {
@@ -108,6 +116,13 @@ export interface WriteCaptureEventParams {
   retry_count?:                    number;
   raw_error?:                      string | null;
   event_notes?:                    string | null;
+  /**
+   * FK to the prior capture event this event retries.
+   * Stage-agnostic: any event_type may carry it.
+   * App-layer guard: event_type = 'retry_attempted' requires non-null.
+   * Step 6, Functional Spec §5.
+   */
+  retry_of_event_id?:              string | null;
 }
 
 // ---------------------------------------------------------------------------

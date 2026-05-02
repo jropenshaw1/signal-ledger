@@ -11,15 +11,26 @@
 //   - capture event sequence: started -> succeeded|failed -> embedding_queued
 //   - provider record update: non-atomic, non-fatal (Step 8 hardens)
 //
+// Step 4 scope:
+//   - external_id derivation: email:<Message-ID> | email_hash:<sha256> | NULL
+//   - dual app-layer duplicate guard: external_id first (when non-null),
+//     then (title, published_date) as secondary
+//   - external_id included in INSERT
+//
+// Step 6 scope:
+//   - retry_of_event_id passed as formal column on ingestion_started event
+//   - event_notes no longer carries retry linkage (moved to formal column)
+//
 // Step 2 explicit defers (not bugs — intentional scope boundaries):
-//   - web ingestion (ingestion_source = 'web'): returns 501 — Step 5
-//   - retry chain enforcement (retry_of_event_id): accepted, logged — Step 6
+//   - web ingestion (ingestion_source = 'web'): returns 501 — future step
+//   - retry chain enforcement (retry_of_event_id): formal column — Step 6
 //   - gap window resolution (gap_window_id): accepted, gap_resolved=false — Step 7
 //   - structured observability fields (duration_ms): Step 8
 // =============================================================================
 
 import { writeCaptureEvent }                  from '../_shared/capture_events.ts';
 import { mapErrorToCode, buildErrorMessage }  from '../_shared/error_mapper.ts';
+import { normalizeText, sha256Hex }            from '../_shared/hash.ts';
 import { successResponse, errorResponse,
          httpStatusForErrorCode }             from '../_shared/response.ts';
 import { getServiceClient }                   from '../_shared/supabase.ts';
@@ -130,17 +141,87 @@ function inferContentType(source: string): ContentType {
 }
 
 // ---------------------------------------------------------------------------
-// Duplicate detection (app-layer guard)
-// DB unique constraint uq_sla_provider_title_date is the authoritative backstop.
-// Step 4 implements full idempotency key enforcement on (provider_id, external_id).
+// external_id derivation (Step 4)
 // ---------------------------------------------------------------------------
+// Determines the idempotency key for an article, scoped by provider_id.
+//
+// Email ingest contract (Gee/Step 4 design review, 2026-05-01):
+//   Prefer  → 'email:<RFC-2822-Message-ID>'         (stable, provider-assigned)
+//   Fallback→ 'email_hash:<sha256(norm_title+body)>' (when Message-ID unavailable)
+//   NULL    → only when no stable identifier can be derived
+//             (preview-only records without message_id — documented gap)
+//
+// Web ingestion (Step 5): will derive from URL or canonical identifier.
+// For now web returns 501, so deriveExternalId returns null for web source.
+//
+// NULL semantics: Postgres UNIQUE treats NULL as distinct, so two NULL rows
+// for the same provider do NOT collide. The (title, published_date) app-layer
+// guard provides secondary duplicate detection for these records.
+
+// normalizeText and sha256Hex imported from _shared/hash.ts
+
+async function deriveExternalId(
+  ingestion_source: string,
+  message_id:       string | null | undefined,
+  title:            string,
+  body_text:        string | null,
+): Promise<string | null> {
+  // Web ingestion: Step 5 will handle external_id derivation from URL.
+  if (ingestion_source !== 'email-backfill') return null;
+
+  // Preferred path: RFC 2822 Message-ID supplied by caller.
+  if (message_id) return `email:${message_id}`;
+
+  // Fallback: content hash over normalized title + body.
+  // Only viable when body_text is present (complete/partial records).
+  if (body_text) {
+    const normalized = normalizeText(title) + '\n' + normalizeText(body_text);
+    const hash       = await sha256Hex(normalized);
+    return `email_hash:${hash}`;
+  }
+
+  // NULL: preview-only record without a Message-ID.
+  // The uq_sla_provider_external_id constraint will not fire for NULL pairs.
+  // The (title, published_date) app-layer guard remains the secondary backstop.
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Duplicate detection (app-layer guard)
+// ---------------------------------------------------------------------------
+// Checks for an existing article by external_id first (when non-null), then
+// falls back to (title, published_date). Both checks mirror DB unique constraints
+// so a match here returns the existing article_id cleanly, avoiding a constraint
+// error and allowing the caller to receive the pre-existing record reference.
+//
+// DB unique constraints remain the authoritative backstop for race conditions.
+
 async function findExistingArticle(
   provider_id:    string,
   title:          string,
-  published_date: string
+  published_date: string,
+  external_id:    string | null,
 ): Promise<string | null> {
   const supabase = getServiceClient();
-  const { data } = await supabase
+
+  // Primary check: external_id idempotency key (Step 4).
+  // Skip when external_id is null — the constraint doesn't fire for NULLs,
+  // and a query for NULL would incorrectly match preview-only records from
+  // other ingestion runs.
+  if (external_id !== null) {
+    const { data: extData } = await supabase
+      .from('sl_articles')
+      .select('article_id')
+      .eq('provider_id', provider_id)
+      .eq('external_id', external_id)
+      .maybeSingle();
+
+    const extId = (extData as { article_id: string } | null)?.article_id;
+    if (extId) return extId;
+  }
+
+  // Secondary check: (title, published_date) — mirrors uq_sla_provider_title_date.
+  const { data: titleData } = await supabase
     .from('sl_articles')
     .select('article_id')
     .eq('provider_id',    provider_id)
@@ -148,7 +229,7 @@ async function findExistingArticle(
     .eq('published_date', published_date)
     .maybeSingle();
 
-  return (data as { article_id: string } | null)?.article_id ?? null;
+  return (titleData as { article_id: string } | null)?.article_id ?? null;
 }
 
 // ---------------------------------------------------------------------------
@@ -222,7 +303,19 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
   const published_date = cp.published_date;
   const completeness   = cp.capture_completeness as CaptureCompleteness;
   const body_text      = cp.body_text ?? null;
+  const message_id     = cp.message_id ?? null;
   const content_type   = inferContentType(input.ingestion_source);
+
+  // -------------------------------------------------------------------------
+  // [Step 4] Derive external_id — idempotency key for this article.
+  // Done early so it can be passed to both the duplicate guard and the INSERT.
+  // -------------------------------------------------------------------------
+  const external_id = await deriveExternalId(
+    input.ingestion_source,
+    message_id,
+    title,
+    body_text,
+  );
 
   // -------------------------------------------------------------------------
   // [Appendix A step 2] ingestion_started event
@@ -238,19 +331,23 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
     attempted_title:                 title,
     attempted_published_date:        published_date,
     source_vs_system_classification: 'not-applicable',
-    event_notes: input.retry_of_event_id
-      ? `Retry of event_id=${input.retry_of_event_id}` // Step 6 enforces chain
-      : null,
+    retry_of_event_id:               input.retry_of_event_id ?? null,
   });
 
   // -------------------------------------------------------------------------
-  // App-layer duplicate guard
-  // Step 4 adds full idempotency key enforcement on (provider_id, external_id).
+  // [Step 4] App-layer duplicate guard — dual check.
+  // Checks external_id first (primary idempotency key), then title+date.
+  // DB unique constraints (uq_sla_provider_external_id, uq_sla_provider_title_date)
+  // remain the authoritative backstop for race conditions.
+  // NULL external_id: no external_id check is performed (see deriveExternalId).
+  // The NULL × 2 gap (two preview-only rows without Message-ID) is accepted
+  // and documented in error_mapper_test.ts Section 6.
   // -------------------------------------------------------------------------
   const existingId = await findExistingArticle(
     input.provider_id,
     title,
-    published_date
+    published_date,
+    external_id,
   );
 
   if (existingId) {
@@ -281,6 +378,7 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
   // -------------------------------------------------------------------------
   // [Appendix A step 3] Article write — atomic INSERT
   // A single INSERT is inherently atomic in PostgreSQL.
+  // external_id carries the derived idempotency key (Step 4).
   // embedding_status is NOT set here — set post-commit per Appendix A step 5.
   // -------------------------------------------------------------------------
   const { data: articleData, error: articleError } = await supabase
@@ -294,6 +392,7 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
       ingestion_source:     input.ingestion_source,
       capture_completeness: completeness,
       body_text:            body_text,
+      external_id:          external_id,   // Step 4: null for preview-only without message_id
       // embedding_status intentionally absent — set to 'pending' post-commit
     })
     .select('article_id')
@@ -324,7 +423,7 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
 
     const errorShape: ErrorShape = {
       error_code: mapped.error_code,
-      message:    buildErrorMessage(mapped.error_code, articleError),
+      message:    buildErrorMessage(mapped.error_code, articleError, mapped.constraint),
       retryable:  mapped.retryable,
       event_id:   failedEventId,
     };
