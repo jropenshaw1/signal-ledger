@@ -353,14 +353,14 @@ CREATE TABLE public.sl_signpost_embeddings (
     embedding_id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
     article_id uuid NOT NULL REFERENCES public.sl_articles (article_id) ON DELETE CASCADE,
     model_id text NOT NULL,
-    embedding vector (1536) NOT NULL,
+    embedding extensions.vector (1536) NOT NULL,
     created_at timestamptz NOT NULL DEFAULT now(),
     provenance jsonb NOT NULL DEFAULT '{}'::jsonb,
     CONSTRAINT uq_sse_article_model UNIQUE (article_id, model_id)
 );
 
 CREATE INDEX idx_sse_embedding_hnsw ON public.sl_signpost_embeddings
-USING hnsw (embedding vector_cosine_ops)
+USING hnsw (embedding extensions.vector_cosine_ops)
 WITH (m = 16, ef_construction = 64);
 
 COMMENT ON TABLE public.sl_signpost_embeddings IS

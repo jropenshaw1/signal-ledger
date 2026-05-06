@@ -1,4 +1,5 @@
 .env
+data/ec_executive_circle_budget.json
 *.json.bak
 credentials.json
 token.json

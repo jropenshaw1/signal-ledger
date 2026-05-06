@@ -1,37 +1,25 @@
 // =============================================================================
 // Signal Ledger — sl_resolve_gap_window Edge Function
-// MCP tool: sl_resolve_gap_window (sl_mcp_tool_signatures_v1.md)
-// Functional Spec v1.0 §7 — gap-window optimistic JSONB mutation
-//
-// Step 7: Resolves a gap window on sl_provider_records.gap_windows JSONB
-// array with optimistic locking via updated_at.
-//
-// Input: provider_id, gap_start, gap_end, resolution_status, resolution_path, notes?
-// Side effects: updates gap_windows JSONB; writes sl_capture_events
+// MCP tool: sl_resolve_gap_window (docs/sl_mcp_tool_signatures_v1.md)
+// Functional Spec v1.1 §7 — gap JSON optimistic mutation + capture events (DD v0.3).
 // =============================================================================
 
-import { writeCaptureEvent }                       from '../_shared/capture_events.ts';
-import { resolveGapWindow }                        from '../_shared/gap_windows.ts';
-import { successResponse, errorResponse }          from '../_shared/response.ts';
+import { writeCaptureEvent }              from '../_shared/capture_events.ts';
+import { resolveGapWindow }               from '../_shared/gap_windows.ts';
+import { successResponse, errorResponse } from '../_shared/response.ts';
 import type {
   ResolveGapWindowInput,
   ResolveGapWindowOutput,
   GapTerminalStatus,
   GapResolutionPath,
 } from '../_shared/types.ts';
+import type { ErrorCode } from '../_shared/types.ts';
 
-// ---------------------------------------------------------------------------
-// CORS headers
-// ---------------------------------------------------------------------------
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
-
-// ---------------------------------------------------------------------------
-// Input validation
-// ---------------------------------------------------------------------------
 
 interface ValidationResult {
   valid:  boolean;
@@ -81,14 +69,7 @@ function validateInput(body: unknown): ValidationResult {
   return { valid: errors.length === 0, errors };
 }
 
-// ---------------------------------------------------------------------------
-// Core resolution logic
-// ---------------------------------------------------------------------------
-
 async function handleResolve(input: ResolveGapWindowInput): Promise<Response> {
-  // -----------------------------------------------------------------------
-  // 1. Attempt optimistic gap window resolution
-  // -----------------------------------------------------------------------
   const result = await resolveGapWindow(
     input.provider_id,
     input.gap_start,
@@ -98,11 +79,8 @@ async function handleResolve(input: ResolveGapWindowInput): Promise<Response> {
     input.notes ?? null,
   );
 
-  // -----------------------------------------------------------------------
-  // 2. Handle failure cases
-  // -----------------------------------------------------------------------
   if (!result.success) {
-    const statusMap: Record<string, { code: string; http: number }> = {
+    const statusMap: Record<string, { code: ErrorCode; http: number }> = {
       provider_not_found: { code: 'VALIDATION_ERROR',   http: 404 },
       not_found:          { code: 'VALIDATION_ERROR',   http: 404 },
       already_terminal:   { code: 'VALIDATION_ERROR',   http: 422 },
@@ -112,21 +90,21 @@ async function handleResolve(input: ResolveGapWindowInput): Promise<Response> {
 
     const mapped = statusMap[result.reason] ?? statusMap.db_error;
 
-    // Write a capture event for the failed resolution attempt
     await writeCaptureEvent({
-      provider_id:                     input.provider_id,
-      article_id:                      null,
-      event_type:                      'ingestion_failed',
-      event_status:                    result.reason === 'conflict' ? 'failed' : 'unresolvable',
-      ingestion_source:                'mcp-api',
-      source_vs_system_classification: result.reason === 'conflict' ? 'system-failed' : 'not-applicable',
-      failure_category:                result.reason === 'conflict' ? 'unknown' : 'unknown',
-      event_notes:                     `gap_resolution_failed: ${result.reason} — ${result.message}`,
+      provider_id: input.provider_id,
+      article_id:  null,
+      event_type:  'ingestion_failed',
+      error_code:  mapped.code,
+      metadata:    {
+        context: 'sl_resolve_gap_window',
+        reason:  result.reason,
+        message: result.message,
+      },
     });
 
     return errorResponse(
       {
-        error_code: mapped.code as 'VALIDATION_ERROR' | 'TRANSIENT_DB_ERROR' | 'SYSTEM_ERROR',
+        error_code: mapped.code,
         message:    result.message,
         retryable:  result.reason === 'conflict',
         event_id:   null,
@@ -135,22 +113,18 @@ async function handleResolve(input: ResolveGapWindowInput): Promise<Response> {
     );
   }
 
-  // -----------------------------------------------------------------------
-  // 3. Success — write capture event + return
-  // -----------------------------------------------------------------------
-  const eventId = await writeCaptureEvent({
-    provider_id:                     input.provider_id,
-    article_id:                      null,
-    event_type:                      'ingestion_succeeded',
-    event_status:                    'resolved',
-    ingestion_source:                'mcp-api',
-    source_vs_system_classification: 'not-applicable',
-    event_notes: [
-      `gap_window_resolved: ${input.gap_start}/${input.gap_end}`,
-      `resolution_status=${input.resolution_status}`,
-      `resolution_path=${input.resolution_path}`,
-      input.notes ? `notes=${input.notes}` : null,
-    ].filter(Boolean).join('; '),
+  await writeCaptureEvent({
+    provider_id: input.provider_id,
+    article_id:  null,
+    event_type:  'ingestion_succeeded',
+    metadata:    {
+      context:            'sl_resolve_gap_window',
+      gap_start:          input.gap_start,
+      gap_end:            input.gap_end,
+      resolution_status:  input.resolution_status,
+      resolution_path:    input.resolution_path,
+      notes:              input.notes ?? null,
+    },
   });
 
   const output: ResolveGapWindowOutput = {
@@ -164,9 +138,6 @@ async function handleResolve(input: ResolveGapWindowInput): Promise<Response> {
   return successResponse(output);
 }
 
-// ---------------------------------------------------------------------------
-// Edge Function entrypoint
-// ---------------------------------------------------------------------------
 Deno.serve(async (req: Request): Promise<Response> => {
 
   if (req.method === 'OPTIONS') {

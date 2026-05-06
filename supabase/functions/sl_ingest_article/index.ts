@@ -1,45 +1,22 @@
 // =============================================================================
 // Signal Ledger — sl_ingest_article Edge Function
-// Implements: MCP tool sl_ingest_article (sl_mcp_tool_signatures_v1.md)
-// Functional Spec v1.0 §1-§5, Appendix A (happy path), Appendix B (failure path)
+// MCP tool: sl_ingest_article (docs/sl_mcp_tool_signatures_v1.md)
+// Functional Spec v1.1 — transaction boundaries §1; errors §4; DD v0.3 schema.
 //
-// Step 2 scope:
-//   - email-backfill happy path: complete, partial, preview-only
-//   - article-write failure path: all error codes, correct HTTP status
-//   - duplicate detection: app-layer guard + DB constraint backstop
-//   - embedding_status = 'pending' set post-commit for complete/partial
-//   - capture event sequence: started -> succeeded|failed -> embedding_queued
-//   - provider record update: non-atomic, non-fatal (Step 8 hardens)
+// Step 2: email-backfill happy + failure paths; idempotency (provider_id +
+// external_id); capture events DD v0.3 shape; ingestion_started → succeeded |
+// failed → embedding_queued.
 //
-// Step 4 scope:
-//   - external_id derivation: email:<Message-ID> | email_hash:<sha256> | NULL
-//   - dual app-layer duplicate guard: external_id first (when non-null),
-//     then (title, published_date) as secondary
-//   - external_id included in INSERT
-//
-// Step 6 scope:
-//   - retry_of_event_id passed as formal column on ingestion_started event
-//   - event_notes no longer carries retry linkage (moved to formal column)
-//
-// Step 7 scope:
-//   - gap_window_id parsed as "{YYYY-MM-DD}_{YYYY-MM-DD}" compound key
-//   - on successful ingestion, resolves matching gap window via optimistic lock
-//   - gap resolution is non-fatal: failure logged but does not block ingestion
-//
-// Step 2 explicit defers (not bugs — intentional scope boundaries):
-//   - web ingestion (ingestion_source = 'web'): returns 501 — future step
-//   - retry chain enforcement (retry_of_event_id): formal column — Step 6
-//   - gap window resolution (gap_window_id): resolved on success — Step 7
-//   - structured observability fields (duration_ms): Step 8
+// Deferred: ingestion_source = web (fetch-from-URL ingestion).
 // =============================================================================
 
-import { writeCaptureEvent }                  from '../_shared/capture_events.ts';
-import { resolveGapWindow }                    from '../_shared/gap_windows.ts';
-import { mapErrorToCode, buildErrorMessage }  from '../_shared/error_mapper.ts';
-import { normalizeText, sha256Hex }            from '../_shared/hash.ts';
+import { writeCaptureEvent }                          from '../_shared/capture_events.ts';
+import { resolveGapWindow }                           from '../_shared/gap_windows.ts';
+import { mapErrorToCode, buildErrorMessage }           from '../_shared/error_mapper.ts';
+import { normalizeText, sha256Hex }                      from '../_shared/hash.ts';
 import { successResponse, errorResponse,
-         httpStatusForErrorCode }             from '../_shared/response.ts';
-import { getServiceClient }                   from '../_shared/supabase.ts';
+        httpStatusForErrorCode }                       from '../_shared/response.ts';
+import { getServiceClient }                            from '../_shared/supabase.ts';
 import type {
   IngestArticleInput,
   IngestArticleOutput,
@@ -49,9 +26,6 @@ import type {
   ErrorShape,
 } from '../_shared/types.ts';
 
-// ---------------------------------------------------------------------------
-// CORS headers
-// ---------------------------------------------------------------------------
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -92,7 +66,7 @@ function validateInput(body: unknown): ValidationResult {
     if (input.content_payload !== undefined) {
       errors.push(
         'content_payload must not be supplied when ingestion_source = web ' +
-        '(v1 does not support hybrid ingestion)'
+          '(v1 does not support hybrid ingestion)',
       );
     }
   }
@@ -115,7 +89,7 @@ function validateInput(body: unknown): ValidationResult {
       const completeness = cp.capture_completeness as string | undefined;
       if (!completeness || !['complete', 'preview-only', 'partial'].includes(completeness)) {
         errors.push(
-          'content_payload.capture_completeness must be "complete", "preview-only", or "partial"'
+          'content_payload.capture_completeness must be "complete", "preview-only", or "partial"',
         );
       }
 
@@ -130,120 +104,49 @@ function validateInput(body: unknown): ValidationResult {
   return { valid: errors.length === 0, errors };
 }
 
-// ---------------------------------------------------------------------------
-// Content type inference
-// ---------------------------------------------------------------------------
-// MCP signature v1 does not expose content_type as a caller field (locked).
-// Inference rule for v1 (single provider, Nate B. Jones):
-//   email-backfill -> 'Nate-executive-briefing' (briefings are emailed)
-//   web            -> 'Nate-feature-article'    (features are web-published)
-//
-// TODO: Flag to spec review before Step 5 (web fetch). If Nate ships feature
-// articles via email in future, expose content_type in a MCP signature revision.
 function inferContentType(source: string): ContentType {
   return source === 'email-backfill'
     ? 'Nate-executive-briefing'
     : 'Nate-feature-article';
 }
 
-// ---------------------------------------------------------------------------
-// external_id derivation (Step 4)
-// ---------------------------------------------------------------------------
-// Determines the idempotency key for an article, scoped by provider_id.
-//
-// Email ingest contract (Gee/Step 4 design review, 2026-05-01):
-//   Prefer  → 'email:<RFC-2822-Message-ID>'         (stable, provider-assigned)
-//   Fallback→ 'email_hash:<sha256(norm_title+body)>' (when Message-ID unavailable)
-//   NULL    → only when no stable identifier can be derived
-//             (preview-only records without message_id — documented gap)
-//
-// Web ingestion (Step 5): will derive from URL or canonical identifier.
-// For now web returns 501, so deriveExternalId returns null for web source.
-//
-// NULL semantics: Postgres UNIQUE treats NULL as distinct, so two NULL rows
-// for the same provider do NOT collide. The (title, published_date) app-layer
-// guard provides secondary duplicate detection for these records.
-
-// normalizeText and sha256Hex imported from _shared/hash.ts
-
 async function deriveExternalId(
-  ingestion_source: string,
-  message_id:       string | null | undefined,
-  title:            string,
-  body_text:        string | null,
-): Promise<string | null> {
-  // Web ingestion: Step 5 will handle external_id derivation from URL.
-  if (ingestion_source !== 'email-backfill') return null;
+  provider_id: string,
+  message_id: string | null | undefined,
+  title: string,
+  published_date: string,
+  body_text: string | null,
+): Promise<string> {
+  if (message_id && message_id.trim() !== '') {
+    return `email:${message_id}`;
+  }
 
-  // Preferred path: RFC 2822 Message-ID supplied by caller.
-  if (message_id) return `email:${message_id}`;
-
-  // Fallback: content hash over normalized title + body.
-  // Only viable when body_text is present (complete/partial records).
   if (body_text) {
     const normalized = normalizeText(title) + '\n' + normalizeText(body_text);
     const hash       = await sha256Hex(normalized);
     return `email_hash:${hash}`;
   }
 
-  // NULL: preview-only record without a Message-ID.
-  // The uq_sla_provider_external_id constraint will not fire for NULL pairs.
-  // The (title, published_date) app-layer guard remains the secondary backstop.
-  return null;
+  const stamp = normalizeText(title) + '|' + published_date + '|' + provider_id;
+  const hash   = await sha256Hex(stamp);
+  return `email_preview:${hash}`;
 }
 
-// ---------------------------------------------------------------------------
-// Duplicate detection (app-layer guard)
-// ---------------------------------------------------------------------------
-// Checks for an existing article by external_id first (when non-null), then
-// falls back to (title, published_date). Both checks mirror DB unique constraints
-// so a match here returns the existing article_id cleanly, avoiding a constraint
-// error and allowing the caller to receive the pre-existing record reference.
-//
-// DB unique constraints remain the authoritative backstop for race conditions.
-
-async function findExistingArticle(
-  provider_id:    string,
-  title:          string,
-  published_date: string,
-  external_id:    string | null,
+async function findExistingArticleByExternalId(
+  provider_id: string,
+  external_id: string,
 ): Promise<string | null> {
   const supabase = getServiceClient();
-
-  // Primary check: external_id idempotency key (Step 4).
-  // Skip when external_id is null — the constraint doesn't fire for NULLs,
-  // and a query for NULL would incorrectly match preview-only records from
-  // other ingestion runs.
-  if (external_id !== null) {
-    const { data: extData } = await supabase
-      .from('sl_articles')
-      .select('article_id')
-      .eq('provider_id', provider_id)
-      .eq('external_id', external_id)
-      .maybeSingle();
-
-    const extId = (extData as { article_id: string } | null)?.article_id;
-    if (extId) return extId;
-  }
-
-  // Secondary check: (title, published_date) — mirrors uq_sla_provider_title_date.
-  const { data: titleData } = await supabase
+  const { data } = await supabase
     .from('sl_articles')
     .select('article_id')
-    .eq('provider_id',    provider_id)
-    .eq('title',          title)
-    .eq('published_date', published_date)
+    .eq('provider_id', provider_id)
+    .eq('external_id', external_id)
     .maybeSingle();
 
-  return (titleData as { article_id: string } | null)?.article_id ?? null;
+  return (data as { article_id: string } | null)?.article_id ?? null;
 }
 
-// ---------------------------------------------------------------------------
-// Provider record update
-// Non-atomic fetch-then-update. Non-fatal: failure never blocks ingestion.
-// In v1 single-provider sequential ingestion the race window is negligible.
-// Step 8 converts this to an atomic SQL function via RPC.
-// ---------------------------------------------------------------------------
 async function updateProviderRecord(provider_id: string): Promise<void> {
   const supabase = getServiceClient();
 
@@ -262,7 +165,7 @@ async function updateProviderRecord(provider_id: string): Promise<void> {
   }
 
   const newCount = ((current as { article_count: number } | null)?.article_count ?? 0) + 1;
-  const today    = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const today    = new Date().toISOString().split('T')[0];
 
   const { error: updateErr } = await supabase
     .from('sl_provider_records')
@@ -280,30 +183,23 @@ async function updateProviderRecord(provider_id: string): Promise<void> {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Core ingestion logic
-// Implements Appendix A (happy path) and Appendix B (failure path).
-// ---------------------------------------------------------------------------
 async function ingestArticle(input: IngestArticleInput): Promise<Response> {
   const supabase  = getServiceClient();
   const startedAt = Date.now();
 
-  // web ingestion not implemented in Step 2 — Step 5
   if (input.ingestion_source === 'web') {
     return errorResponse(
       {
         error_code: 'SYSTEM_ERROR',
         message:
-          'Web ingestion (ingestion_source = "web") is not yet implemented. ' +
-          'Use ingestion_source = "email-backfill" with content_payload in Step 2.',
+          'Web ingestion (ingestion_source = "web") is not yet implemented — use email-backfill.',
         retryable: false,
         event_id:  null,
       },
-      501
+      501,
     );
   }
 
-  // email-backfill — content_payload validated present at this point
   const cp             = input.content_payload!;
   const title          = cp.title;
   const published_date = cp.published_date;
@@ -312,63 +208,38 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
   const message_id     = cp.message_id ?? null;
   const content_type   = inferContentType(input.ingestion_source);
 
-  // -------------------------------------------------------------------------
-  // [Step 4] Derive external_id — idempotency key for this article.
-  // Done early so it can be passed to both the duplicate guard and the INSERT.
-  // -------------------------------------------------------------------------
   const external_id = await deriveExternalId(
-    input.ingestion_source,
+    input.provider_id,
     message_id,
     title,
+    published_date,
     body_text,
   );
 
-  // -------------------------------------------------------------------------
-  // [Appendix A step 2] ingestion_started event
-  // Written BEFORE any article write attempt — Functional Spec §1.
-  // -------------------------------------------------------------------------
   const startedEventId = await writeCaptureEvent({
-    provider_id:                     input.provider_id,
-    article_id:                      null,
-    event_type:                      'ingestion_started',
-    event_status:                    'success',
-    ingestion_source:                input.ingestion_source,
-    attempted_url:                   input.url         ?? null,
-    attempted_title:                 title,
-    attempted_published_date:        published_date,
-    source_vs_system_classification: 'not-applicable',
-    retry_of_event_id:               input.retry_of_event_id ?? null,
+    provider_id:        input.provider_id,
+    article_id:         null,
+    event_type:         'ingestion_started',
+    retry_of_event_id:  input.retry_of_event_id ?? null,
+    duration_ms:        null,
+    metadata:           { ingestion_source: input.ingestion_source },
   });
 
-  // -------------------------------------------------------------------------
-  // [Step 4] App-layer duplicate guard — dual check.
-  // Checks external_id first (primary idempotency key), then title+date.
-  // DB unique constraints (uq_sla_provider_external_id, uq_sla_provider_title_date)
-  // remain the authoritative backstop for race conditions.
-  // NULL external_id: no external_id check is performed (see deriveExternalId).
-  // The NULL × 2 gap (two preview-only rows without Message-ID) is accepted
-  // and documented in error_mapper_test.ts Section 6.
-  // -------------------------------------------------------------------------
-  const existingId = await findExistingArticle(
+  const existingId = await findExistingArticleByExternalId(
     input.provider_id,
-    title,
-    published_date,
     external_id,
   );
 
+  const elapsedAfterDupCheck = Date.now() - startedAt;
+
   if (existingId) {
     const dupEventId = await writeCaptureEvent({
-      provider_id:                     input.provider_id,
-      article_id:                      existingId,
-      event_type:                      'ingestion_failed',
-      event_status:                    'duplicate-detected',
-      ingestion_source:                input.ingestion_source,
-      attempted_url:                   input.url ?? null,
-      attempted_title:                 title,
-      attempted_published_date:        published_date,
-      source_vs_system_classification: 'not-applicable',
-      failure_category:                'duplicate',
-      event_notes:                     `Duplicate of article_id=${existingId}`,
+      provider_id: input.provider_id,
+      article_id:  existingId,
+      event_type:  'ingestion_failed',
+      error_code:  'DUPLICATE_ARTICLE',
+      duration_ms: elapsedAfterDupCheck,
+      metadata:    { duplicate_article_id: existingId, external_id },
     });
 
     return successResponse<IngestArticleOutput>({
@@ -381,50 +252,40 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
     });
   }
 
-  // -------------------------------------------------------------------------
-  // [Appendix A step 3] Article write — atomic INSERT
-  // A single INSERT is inherently atomic in PostgreSQL.
-  // external_id carries the derived idempotency key (Step 4).
-  // embedding_status is NOT set here — set post-commit per Appendix A step 5.
-  // -------------------------------------------------------------------------
   const { data: articleData, error: articleError } = await supabase
     .from('sl_articles')
     .insert({
-      provider_id:          input.provider_id,
-      content_type:         content_type,
-      title:                title,
-      published_date:       published_date,
-      ingestion_date:       new Date().toISOString(),
-      ingestion_source:     input.ingestion_source,
-      capture_completeness: completeness,
-      body_text:            body_text,
-      external_id:          external_id,   // Step 4: null for preview-only without message_id
-      // embedding_status intentionally absent — set to 'pending' post-commit
+      provider_id:                   input.provider_id,
+      external_id,
+      content_type,
+      title,
+      published_date,
+      ingestion_date:                new Date().toISOString(),
+      ingestion_source:              input.ingestion_source,
+      capture_completeness:          completeness,
+      url:                           null,
+      body_text,
+      author_signposts:              [],
+      cited_claims:                  [],
+      structured_technical_content:  [],
     })
     .select('article_id')
     .single();
 
   const durationMs = Date.now() - startedAt;
 
-  // -------------------------------------------------------------------------
-  // [Appendix B] Article write failure path
-  // -------------------------------------------------------------------------
   if (articleError) {
     const mapped = mapErrorToCode(articleError);
 
     const failedEventId = await writeCaptureEvent({
-      provider_id:                     input.provider_id,
-      article_id:                      null,
-      event_type:                      'ingestion_failed',
-      event_status:                    'failed',
-      ingestion_source:                input.ingestion_source,
-      attempted_url:                   input.url ?? null,
-      attempted_title:                 title,
-      attempted_published_date:        published_date,
-      source_vs_system_classification: 'system-failed',
-      failure_category:                mapped.failure_category as FailureCategory,
-      raw_error:                       JSON.stringify(articleError),
-      event_notes:                     `duration_ms=${durationMs}`,
+      provider_id: input.provider_id,
+      article_id:  null,
+      event_type:  'ingestion_failed',
+      error_code:  mapped.error_code,
+      duration_ms:   durationMs,
+      metadata:      {
+        constraint: mapped.constraint ?? null,
+      },
     });
 
     const errorShape: ErrorShape = {
@@ -437,69 +298,29 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
     return errorResponse(errorShape, httpStatusForErrorCode(mapped.error_code));
   }
 
-  // -------------------------------------------------------------------------
-  // Happy path — article committed
-  // -------------------------------------------------------------------------
   const article_id = (articleData as { article_id: string }).article_id;
 
-  // [Appendix A step 4] ingestion_succeeded event
   const succeededEventId = await writeCaptureEvent({
-    provider_id:                     input.provider_id,
-    article_id:                      article_id,
-    event_type:                      'ingestion_succeeded',
-    event_status:                    'success',
-    ingestion_source:                input.ingestion_source,
-    attempted_url:                   input.url ?? null,
-    attempted_title:                 title,
-    attempted_published_date:        published_date,
-    source_vs_system_classification: 'not-applicable',
-    event_notes:                     `duration_ms=${durationMs}`,
+    provider_id: input.provider_id,
+    article_id:  article_id,
+    event_type:  'ingestion_succeeded',
+    duration_ms: durationMs,
+    metadata:    { external_id },
   });
 
-  // -------------------------------------------------------------------------
-  // [Appendix A step 5] embedding_status + embedding_queued event
-  // preview-only articles: no body_text -> embedding never applies -> NULL.
-  // complete / partial:    set 'pending' -> async worker picks up.
-  // -------------------------------------------------------------------------
-  let embeddingEventId: string | null = null;
+  await writeCaptureEvent({
+    provider_id: input.provider_id,
+    article_id:  article_id,
+    event_type:  'embedding_queued',
+    duration_ms: null,
+    metadata:    {
+      model_id:           'text-embedding-3-small',
+      embedding_deferred:   true,
+    },
+  });
 
-  if (completeness !== 'preview-only') {
-    const { error: statusError } = await supabase
-      .from('sl_articles')
-      .update({ embedding_status: 'pending' })
-      .eq('article_id', article_id);
-
-    if (statusError) {
-      // Non-fatal. The embedding worker (Step 5) will add a reconciliation
-      // sweep: SELECT WHERE capture_completeness != 'preview-only'
-      // AND embedding_status IS NULL to catch orphaned-status rows.
-      console.error('[sl_ingest_article] embedding_status update failed (non-fatal)', {
-        article_id,
-        error: statusError,
-      });
-    }
-
-    embeddingEventId = await writeCaptureEvent({
-      provider_id:                     input.provider_id,
-      article_id:                      article_id,
-      event_type:                      'embedding_queued',
-      event_status:                    'success',
-      ingestion_source:                input.ingestion_source,
-      source_vs_system_classification: 'not-applicable',
-      event_notes:
-        'Deferred async — 3 attempts: Attempt 1 -> wait 2s -> Attempt 2 -> wait 8s -> Attempt 3 -> terminal',
-    });
-  }
-
-  // [Appendix A step 6] Provider record update (non-fatal)
   await updateProviderRecord(input.provider_id);
 
-  // -------------------------------------------------------------------------
-  // [Step 7] Gap window resolution (non-fatal)
-  // If gap_window_id is supplied and ingestion succeeded, resolve the gap.
-  // gap_window_id format: "{YYYY-MM-DD}_{YYYY-MM-DD}" (gap_start_gap_end).
-  // Resolution failure is logged but never blocks the ingestion response.
-  // -------------------------------------------------------------------------
   let gapResolved = false;
 
   if (input.gap_window_id) {
@@ -513,7 +334,7 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
         gapStart,
         gapEnd,
         'resolved',
-        input.ingestion_source === 'web' ? 'web' : 'email-backfill',
+        'email-backfill',
       );
 
       if (gapResult.success) {
@@ -538,24 +359,22 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
     }
   }
 
-  // Return ingestion_succeeded event_id as the canonical reference
   const outputStatus: IngestArticleOutput['status'] =
-    completeness === 'preview-only' ? 'preview-only'
-    : completeness === 'partial'    ? 'partial'
-    : 'success';
+    completeness === 'preview-only'
+      ? 'preview-only'
+      : completeness === 'partial'
+      ? 'partial'
+      : 'success';
 
   return successResponse<IngestArticleOutput>({
     article_id:           article_id,
-    event_id:             succeededEventId ?? embeddingEventId ?? startedEventId ?? '',
+    event_id:             succeededEventId ?? startedEventId ?? '',
     capture_completeness: completeness,
     status:               outputStatus,
     gap_resolved:         gapResolved,
   });
 }
 
-// ---------------------------------------------------------------------------
-// Edge Function entrypoint
-// ---------------------------------------------------------------------------
 Deno.serve(async (req: Request): Promise<Response> => {
 
   if (req.method === 'OPTIONS') {
@@ -565,7 +384,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method !== 'POST') {
     return new Response(
       JSON.stringify({ error: 'Method not allowed — POST only' }),
-      { status: 405, headers: { 'Content-Type': 'application/json' } }
+      { status: 405, headers: { 'Content-Type': 'application/json' } },
     );
   }
 
@@ -580,7 +399,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         retryable:  false,
         event_id:   null,
       },
-      400
+      400,
     );
   }
 
@@ -593,7 +412,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         retryable:  false,
         event_id:   null,
       },
-      422
+      422,
     );
   }
 
@@ -608,7 +427,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         retryable:  true,
         event_id:   null,
       },
-      500
+      500,
     );
   }
 });
