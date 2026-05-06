@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; font-family: 'Inter', sans-serif; padding: 16px; }
+  .row { display: flex; align-items: baseline; gap: 16px; padding: 7px 0; border-bottom: 1px solid #151A20; }
+  .meta { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #334155; width: 96px; flex-shrink: 0; line-height: 1.4; }
+  .use { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #475569; width: 130px; flex-shrink: 0; }
+  .specimen { font-family: 'JetBrains Mono', monospace; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3B82F6; margin: 12px 0 4px; }
+</style>
+</head>
+<body>
+  <div class="section-label">JetBrains Mono — Monospace (data, IDs, values, codes)</div>
+
+  <div class="row">
+    <div class="meta">11px / medium</div>
+    <div class="use">table data</div>
+    <div class="specimen" style="font-size:11px; font-weight:500; color:#E2E8F0">AI and the Future of Work — Executive Intelligence</div>
+  </div>
+  <div class="row">
+    <div class="meta">11px / regular</div>
+    <div class="use">timestamp</div>
+    <div class="specimen" style="font-size:11px; font-weight:400; color:#94A3B8">2026-04-29 · 14:32:07 UTC</div>
+  </div>
+  <div class="row">
+    <div class="meta">11px / medium · blue</div>
+    <div class="use">similarity score</div>
+    <div class="specimen" style="font-size:11px; font-weight:500; color:#60A5FA">0.847</div>
+  </div>
+  <div class="row">
+    <div class="meta">10px / regular</div>
+    <div class="use">micro label / chip</div>
+    <div class="specimen" style="font-size:10px; font-weight:400; color:#94A3B8; letter-spacing:0.04em; text-transform:uppercase">INGESTION_STARTED</div>
+  </div>
+  <div class="row">
+    <div class="meta">10px / regular</div>
+    <div class="use">error code</div>
+    <div class="specimen" style="font-size:10px; font-weight:500; color:#F87171">EMBEDDING_FAILURE</div>
+  </div>
+  <div class="row">
+    <div class="meta">10px / regular</div>
+    <div class="use">article ID (uuid)</div>
+    <div class="specimen" style="font-size:10px; font-weight:400; color:#334155">a3f2c1d0-8b4e-47a9-b7f3-2c9e1a5d0f84</div>
+  </div>
+  <div class="row">
+    <div class="meta">10px / regular</div>
+    <div class="use">content hash</div>
+    <div class="specimen" style="font-size:10px; font-weight:400; color:#334155">3a7f2b9c1d4e8f0a...</div>
+  </div>
+  <div class="row">
+    <div class="meta">10px / medium</div>
+    <div class="use">retry chain</div>
+    <div class="specimen" style="font-size:10px; font-weight:500; color:#FBBF24">retry_of: 9b3c2d1e → attempt 2/3 · wait 8s</div>
+  </div>
+
+  <div class="section-label" style="margin-top:16px">Monospace in Context — Event Feed Row</div>
+  <div style="background:#111418; border:1px solid #1E2530; padding:10px 12px; margin-top:4px; border-radius:2px">
+    <div style="display:flex; gap:12px; align-items:center; font-family:'JetBrains Mono',monospace;">
+      <span style="font-size:10px; color:#86EFAC">●</span>
+      <span style="font-size:10px; font-weight:500; color:#94A3B8; letter-spacing:0.05em; text-transform:uppercase; width:140px">ingestion_succeeded</span>
+      <span style="font-size:10px; color:#E2E8F0; flex:1">The Orchestration Problem — Nate B. Jones</span>
+      <span style="font-size:10px; color:#475569">14:32:07</span>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center; font-family:'JetBrains Mono',monospace; margin-top:6px">
+      <span style="font-size:10px; color:#FBBF24">◌</span>
+      <span style="font-size:10px; font-weight:500; color:#94A3B8; letter-spacing:0.05em; text-transform:uppercase; width:140px">retry_attempted</span>
+      <span style="font-size:10px; color:#E2E8F0; flex:1">article: a3f2c1d0… · EMBEDDING_FAILURE · attempt 2</span>
+      <span style="font-size:10px; color:#475569">14:32:15</span>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center; font-family:'JetBrains Mono',monospace; margin-top:6px">
+      <span style="font-size:10px; color:#F87171">✕</span>
+      <span style="font-size:10px; font-weight:500; color:#94A3B8; letter-spacing:0.05em; text-transform:uppercase; width:140px">embedding_failed</span>
+      <span style="font-size:10px; color:#F87171; flex:1">RATE_LIMITED · retryable: true · attempt 3 (terminal)</span>
+      <span style="font-size:10px; color:#475569">14:32:27</span>
+    </div>
+  </div>
+</body>
+</html>

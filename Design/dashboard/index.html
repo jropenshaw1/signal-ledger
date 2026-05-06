@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Ledger — Operational Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../brand_tokens.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+  body {
+    background: var(--bg-base);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    color: var(--text-primary);
+  }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg-inset); }
+  ::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-elevated); }
+  select, input, button { font-family: inherit; }
+  option { background: var(--bg-elevated); color: var(--text-primary); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+// ══════════════════════════════════════════════════════════════════════════
+// Signal Ledger — Operational Console (single-file bundle)
+// Brand: Openshaw palette (light, high-contrast, amber/burnt sienna)
+// All 4 components inlined — no external JSX fetches required
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── ProviderBar ───────────────────────────────────────────────────────────
+
+const GAP_DATA = {
+  status: 'acknowledged', label: 'Feb 12–21',
+  gap_start: '2026-02-12', gap_end: '2026-02-21',
+  article_count_estimated: 10,
+  resolution_path: 'email-backfill',
+  resolution_notes: "Articles from Jonathan's subscription start before MCP index began. Sourcing from Gmail archive via email-backfill path.",
+};
+
+const STATUS_LIFECYCLE = ['open','acknowledged','resolved','unresolvable'];
+
+const GapPopover = ({ gap, onClose }) => {
+  const resPathColor = { 'web':'var(--accent-600)', 'email-backfill':'var(--info-700)', 'none':'var(--text-muted)' };
+  const stepStyle = (s) => {
+    const idx = STATUS_LIFECYCLE.indexOf(gap.status);
+    const myIdx = STATUS_LIFECYCLE.indexOf(s);
+    if (s === gap.status) return { background:'var(--accent-100)', color:'var(--accent-700)', border:'1px solid var(--accent-border)', fontWeight:700 };
+    if (myIdx < idx) return { background:'var(--bg-inset)', color:'var(--text-disabled)', border:'1px solid var(--border-subtle)' };
+    return { background:'transparent', color:'var(--text-disabled)', border:'1px solid var(--border-subtle)' };
+  };
+  return (
+    <div style={{ position:'absolute', top:'30px', left:0, zIndex:300, background:'var(--bg-elevated)', border:'1px solid var(--border-elevated)', borderRadius:'4px', width:'310px', boxShadow:'0 4px 12px rgba(44,26,8,0.14)', fontFamily:"'JetBrains Mono',monospace" }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'7px 11px', borderBottom:'1px solid var(--border-default)', background:'var(--bg-header)' }}>
+        <span style={{ fontFamily:"'Inter',sans-serif", fontSize:'11px', fontWeight:700, color:'var(--text-heading)' }}>Gap Window</span>
+        <button onClick={onClose} style={{ background:'none', border:'none', color:'var(--text-muted)', cursor:'pointer', fontSize:'14px', lineHeight:1, padding:'0 2px' }}>×</button>
+      </div>
+      <div style={{ padding:'10px 12px' }}>
+        {[['gap_start',gap.gap_start,'var(--text-secondary)'],['gap_end',gap.gap_end,'var(--text-secondary)'],['article_count_estimated',`~${gap.article_count_estimated}`,'var(--text-secondary)'],['resolution_path',gap.resolution_path,resPathColor[gap.resolution_path]||'var(--text-secondary)']].map(([label,value,color])=>(
+          <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'4px 0', borderBottom:'1px solid var(--border-subtle)' }}>
+            <span style={{ fontSize:'9px', color:'var(--text-muted)', letterSpacing:'0.04em' }}>{label}</span>
+            <span style={{ fontSize:'10px', fontWeight:500, color }}>{value}</span>
+          </div>
+        ))}
+        {gap.resolution_notes && (
+          <div style={{ marginTop:'8px', padding:'6px 8px', background:'var(--bg-inset)', border:'1px solid var(--border-default)', borderRadius:'2px' }}>
+            <div style={{ fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'3px' }}>resolution_notes</div>
+            <div style={{ fontFamily:"'Inter',sans-serif", fontSize:'10px', color:'var(--text-secondary)', lineHeight:1.55 }}>{gap.resolution_notes}</div>
+          </div>
+        )}
+        <div style={{ marginTop:'10px' }}>
+          <div style={{ fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'5px' }}>resolution_status lifecycle</div>
+          <div style={{ display:'flex', alignItems:'center', gap:'4px', flexWrap:'wrap' }}>
+            {STATUS_LIFECYCLE.map((s,i)=>(
+              <React.Fragment key={s}>
+                <span style={{ padding:'2px 6px', borderRadius:'2px', fontSize:'9px', fontWeight:500, ...stepStyle(s) }}>{s}</span>
+                {i < STATUS_LIFECYCLE.length-1 && <span style={{ fontSize:'9px', color:'var(--text-disabled)' }}>→</span>}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ProviderBar = ({ provider = {} }) => {
+  const [gapOpen, setGapOpen] = React.useState(false);
+  const gapRef = React.useRef(null);
+  React.useEffect(() => {
+    if (!gapOpen) return;
+    const h = (e) => { if (gapRef.current && !gapRef.current.contains(e.target)) setGapOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, [gapOpen]);
+
+  const { name='Nate B. Jones', platform='Substack', url='natesnewsletter.substack.com', tier='paid', corpusStart='2026-02-12', articleCount=47, lastIngestion='2026-05-02', gapWindow=GAP_DATA, evaluation='maintain-current-tier' } = provider;
+
+  const tierBadge = tier==='paid'
+    ? { bg:'var(--success-100)', color:'var(--success-900)', border:'1px solid var(--success-500)' }
+    : { bg:'var(--bg-inset)', color:'var(--text-secondary)', border:'1px solid var(--border-default)' };
+
+  const gapBadge = {
+    open:         { bg:'var(--warning-100)', color:'var(--warning-900)', border:'1px solid var(--warning-600)', symbol:'▲' },
+    acknowledged: { bg:'var(--accent-100)',  color:'var(--accent-700)',  border:'1px solid var(--accent-border)', symbol:'◎' },
+    resolved:     { bg:'var(--success-100)', color:'var(--success-900)', border:'1px solid var(--success-500)', symbol:'✓' },
+    unresolvable: { bg:'var(--bg-inset)',    color:'var(--text-muted)',   border:'1px solid var(--border-default)', symbol:'—' },
+  }[gapWindow?.status] || {};
+
+  const evalBadge = {
+    'maintain-current-tier': { color:'var(--text-secondary)', border:'1px solid var(--border-default)', bg:'var(--bg-inset)' },
+    'upgrade-candidate':     { color:'var(--success-900)', border:'1px solid var(--success-500)', bg:'var(--success-100)' },
+    'degradation-signal':    { color:'var(--warning-900)', border:'1px solid var(--warning-600)', bg:'var(--warning-100)' },
+    'abandon-signal':        { color:'var(--danger-900)', border:'1px solid var(--danger-600)', bg:'var(--danger-100)' },
+  }[evaluation] || {};
+
+  const pill = (children, style) => (
+    <span style={{ display:'inline-flex', alignItems:'center', padding:'2px 7px', borderRadius:'2px', fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', fontWeight:700, whiteSpace:'nowrap', ...style }}>{children}</span>
+  );
+  const metaItem = (label, content, last=false) => (
+    <div style={{ display:'flex', flexDirection:'column', gap:'2px', padding:'0 12px', borderRight: last ? 'none' : '1px solid var(--border-subtle)' }}>
+      <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em' }}>{label}</div>
+      <div style={{ display:'flex', alignItems:'center' }}>{content}</div>
+    </div>
+  );
+
+  return (
+    <div style={{ display:'flex', alignItems:'center', height:'56px', background:'var(--bg-header)', borderBottom:'1px solid var(--border-elevated)', padding:'0 16px', flexShrink:0, position:'relative', zIndex:10 }}>
+      <div style={{ display:'flex', alignItems:'center', gap:'10px', paddingRight:'18px', borderRight:'1px solid var(--border-default)', marginRight:'18px', flexShrink:0 }}>
+        <div style={{ width:'32px', height:'32px', borderRadius:'4px', background:'var(--accent-600)', border:'1px solid var(--accent-700)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'11px', fontWeight:700, color:'var(--text-inverse)' }}>NJ</span>
+        </div>
+        <div>
+          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:'14px', fontWeight:700, color:'var(--text-heading)' }}>{name}</div>
+          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--text-muted)', marginTop:'1px' }}>{platform} · {url}</div>
+        </div>
+      </div>
+      <div style={{ display:'flex', alignItems:'center', flex:1 }}>
+        {metaItem('Tier', pill(`${tier==='paid'?'● ':'○ '}${tier}`, { background:tierBadge.bg, color:tierBadge.color, border:tierBadge.border }))}
+        {metaItem('Corpus Start', <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'12px', fontWeight:500, color:'var(--text-secondary)' }}>{corpusStart}</span>)}
+        {metaItem('Articles', <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'18px', fontWeight:700, color:'var(--text-heading)' }}>{articleCount}</span>)}
+        {metaItem('Last Ingestion', <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'12px', fontWeight:500, color:'var(--text-secondary)' }}>{lastIngestion}</span>)}
+        {metaItem('Gap Window',
+          <div ref={gapRef} style={{ position:'relative' }}>
+            <span onClick={()=>setGapOpen(o=>!o)} style={{ display:'inline-flex', alignItems:'center', padding:'2px 7px', borderRadius:'2px', fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', fontWeight:700, whiteSpace:'nowrap', background:gapBadge.bg, color:gapBadge.color, border:gapBadge.border, cursor:'pointer', userSelect:'none' }}>
+              {gapBadge.symbol} {gapWindow.label} · {gapWindow.status}
+            </span>
+            {gapOpen && <GapPopover gap={gapWindow} onClose={()=>setGapOpen(false)} />}
+          </div>
+        )}
+        {metaItem('Last Evaluation', pill(evaluation, { background:evalBadge.bg, color:evalBadge.color, border:evalBadge.border }), true)}
+      </div>
+    </div>
+  );
+};
+
+// ── IngestionMonitor ──────────────────────────────────────────────────────
+
+const SAMPLE_EVENTS = [
+  { id:'e1',  type:'ingestion_started',   status:'neutral',  time:'14:32:01', detail:'The Orchestration Problem — Nate B. Jones' },
+  { id:'e2',  type:'ingestion_succeeded', status:'success',  time:'14:32:03', detail:'a3f2c1d0… · complete' },
+  { id:'e3',  type:'embedding_queued',    status:'neutral',  time:'14:32:03', detail:'a3f2c1d0… · pending' },
+  { id:'e4',  type:'embedding_succeeded', status:'success',  time:'14:32:07', detail:'a3f2c1d0… · complete' },
+  { id:'e5',  type:'ingestion_started',   status:'neutral',  time:'14:33:10', detail:'Credential vs. Capability — Nate B. Jones' },
+  { id:'e6',  type:'ingestion_succeeded', status:'success',  time:'14:33:12', detail:'b7e1d4f2… · partial' },
+  { id:'e7',  type:'embedding_failed',    status:'failed',   time:'14:33:12', detail:'RATE_LIMITED · retryable · attempt 1/3', errorCode:'RATE_LIMITED', retryable:true },
+  { id:'e8',  type:'retry_attempted',     status:'retry',    time:'14:33:14', detail:'retry_of: evt_a1… · wait 2s' },
+  { id:'e9',  type:'embedding_failed',    status:'failed',   time:'14:33:14', detail:'RATE_LIMITED · retryable · attempt 2/3', retryable:true },
+  { id:'e10', type:'retry_attempted',     status:'retry',    time:'14:33:22', detail:'retry_of: evt_d4… · wait 8s' },
+  { id:'e11', type:'embedding_failed',    status:'terminal', time:'14:33:22', detail:'RATE_LIMITED · attempt 3/3 · TERMINAL', retryable:false, terminal:true },
+  { id:'e12', type:'ingestion_failed',    status:'failed',   time:'14:34:01', detail:'DUPLICATE_ARTICLE · retryable: false' },
+];
+
+const DOT = {
+  neutral:  { sym:'○', color:'var(--text-disabled)' },
+  success:  { sym:'●', color:'var(--success-600)' },
+  failed:   { sym:'✕', color:'var(--danger-600)' },
+  terminal: { sym:'✕', color:'var(--danger-700)' },
+  retry:    { sym:'↺', color:'var(--warning-600)' },
+};
+
+const TYPE_COLOR = {
+  ingestion_started:   'var(--text-muted)',
+  ingestion_succeeded: 'var(--success-700)',
+  ingestion_failed:    'var(--danger-700)',
+  embedding_queued:    'var(--text-muted)',
+  embedding_succeeded: 'var(--success-700)',
+  embedding_failed:    'var(--danger-700)',
+  retry_attempted:     'var(--warning-700)',
+};
+
+const ROW_BG = {
+  failed:   'rgba(185,28,28,0.05)',
+  terminal: 'rgba(185,28,28,0.09)',
+  retry:    'rgba(146,64,14,0.05)',
+};
+
+const IngestionMonitor = ({ events = SAMPLE_EVENTS }) => {
+  const [selected, setSelected] = React.useState(null);
+  const succeeded = events.filter(e=>e.status==='success').length;
+  const failed = events.filter(e=>e.status==='failed'||e.status==='terminal').length;
+  const retries = events.filter(e=>e.status==='retry').length;
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', background:'var(--bg-surface)', border:'1px solid var(--border-default)', width:'240px', flexShrink:0, overflow:'hidden' }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 12px', borderBottom:'1px solid var(--border-default)', background:'var(--bg-header)', flexShrink:0 }}>
+        <span style={{ fontFamily:"'Inter',sans-serif", fontSize:'12px', fontWeight:700, color:'var(--text-heading)' }}>Ingestion Monitor</span>
+        <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)' }}>live</span>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'14px 110px 1fr 50px', gap:'6px', padding:'3px 10px', borderBottom:'1px solid var(--border-default)', background:'var(--bg-inset)', flexShrink:0 }}>
+        {['','Event','Detail','Time'].map((h,i)=>(
+          <div key={i} style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.07em' }}>{h}</div>
+        ))}
+      </div>
+      <div style={{ flex:1, overflowY:'auto' }}>
+        {events.map(ev=>{
+          const dot = DOT[ev.status]||DOT.neutral;
+          const isSelected = selected===ev.id;
+          return (
+            <div key={ev.id} onClick={()=>setSelected(isSelected?null:ev.id)} style={{ display:'grid', gridTemplateColumns:'14px 110px 1fr 50px', gap:'6px', alignItems:'center', padding:'5px 10px', borderBottom:'1px solid var(--border-subtle)', cursor:'pointer', transition:'background 150ms', minHeight:'28px', background: isSelected ? 'var(--bg-active)' : ROW_BG[ev.status]||'transparent', borderLeft: isSelected ? '2px solid var(--border-focus)' : '2px solid transparent' }}>
+              <span style={{ fontSize:'9px', color:dot.color, textAlign:'center', lineHeight:1 }}>{dot.sym}</span>
+              <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', fontWeight:500, color:TYPE_COLOR[ev.type]||'var(--text-muted)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{ev.type}</span>
+              <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:ev.terminal?'var(--danger-700)':ev.status==='failed'?'var(--danger-600)':ev.status==='retry'?'var(--warning-700)':'var(--text-secondary)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                {ev.terminal ? <strong>{ev.detail}</strong> : ev.detail}
+              </span>
+              <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-disabled)', textAlign:'right' }}>{ev.time}</span>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ display:'flex', gap:'10px', padding:'5px 10px', borderTop:'1px solid var(--border-default)', background:'var(--bg-inset)', flexShrink:0 }}>
+        <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', display:'flex', alignItems:'center', gap:'3px' }}><span style={{color:'var(--success-600)'}}>●</span> {succeeded}</span>
+        <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', display:'flex', alignItems:'center', gap:'3px' }}><span style={{color:'var(--danger-600)'}}>✕</span> {failed}</span>
+        <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', display:'flex', alignItems:'center', gap:'3px' }}><span style={{color:'var(--warning-600)'}}>↺</span> {retries}</span>
+      </div>
+    </div>
+  );
+};
+
+// ── CorpusExplorer ────────────────────────────────────────────────────────
+
+const ARTICLES = [
+  { id:'a3f2c1d0', title:'The Orchestration Problem: How Multi-Agent Systems Break', published:'2026-04-17', contentType:'Nate-feature-article', completeness:'complete', embeddingStatus:'complete', kitCount:3,
+    signposts:['"The key insight here is that trust between agents is not symmetric…"','"What I\'m watching for in Q2: whether orchestration failures cluster around…"'],
+    claims:[{ text:'Gartner projects 80% of enterprise AI deployments will include multi-agent coordination by 2027.', attribution:'Gartner', type:'statistic' }],
+    blocks:[{ name:'Trust Gradient Model', type:'framework', kitCandidate:true }] },
+  { id:'b7e1d4f2', title:'Executive Brief: AI Infrastructure Spend — Week of Apr 14', published:'2026-04-14', contentType:'Nate-executive-briefing', completeness:'preview-only', embeddingStatus:null, kitCount:0, signposts:[], claims:[], blocks:[] },
+  { id:'c9d2e5f3', title:'Credential vs. Capability: What Agents Actually Trade', published:'2026-03-28', contentType:'Nate-feature-article', completeness:'partial', embeddingStatus:'pending', kitCount:1,
+    signposts:['"The credential economy is not about proof of work — it is about proof of trustworthiness…"'],
+    claims:[], blocks:[{ name:'Credential Ladder', type:'taxonomy', kitCandidate:false }] },
+  { id:'d1e3f4a5', title:'Prompt Engineering Is Dead. Long Live Prompt Architecture.', published:'2026-03-14', contentType:'Nate-feature-article', completeness:'complete', embeddingStatus:'processing', kitCount:2,
+    signposts:['"The contrarian take: prompt templates are the new if-statements…"'],
+    claims:[{ text:'OpenAI internal data shows 60% of GPT-4 failures trace to prompt structure.', attribution:'OpenAI (reported)', type:'statistic' }],
+    blocks:[{ name:'Prompt Architecture Taxonomy', type:'taxonomy', kitCandidate:true }] },
+];
+
+const COMPLETENESS = {
+  complete:     { sym:'●', bg:'var(--success-100)', color:'var(--success-900)', border:'var(--success-500)', embColor:'var(--success-700)' },
+  'preview-only':{ sym:'◐', bg:'var(--info-100)',    color:'var(--info-900)',    border:'var(--info-600)',    embColor:'var(--text-disabled)' },
+  partial:      { sym:'◑', bg:'var(--warning-100)', color:'var(--warning-900)', border:'var(--warning-600)', embColor:'var(--warning-700)' },
+};
+
+const CT = {
+  'Nate-feature-article':    { bg:'var(--accent-100)', color:'var(--accent-700)', border:'var(--accent-border)', short:'feature' },
+  'Nate-executive-briefing': { bg:'var(--info-100)',   color:'var(--info-700)',   border:'var(--info-600)',      short:'executive' },
+};
+
+const PulsingDot = () => {
+  const [op, setOp] = React.useState(1);
+  React.useEffect(()=>{ let d=-1; const iv=setInterval(()=>setOp(o=>{const n=o+d*0.04;if(n<=0.3)d=1;if(n>=1)d=-1;return n;}),50); return()=>clearInterval(iv); },[]);
+  return <span style={{ display:'inline-block', width:'6px', height:'6px', background:'var(--accent-500)', borderRadius:'50%', opacity:op }} />;
+};
+
+const EmbStatus = ({ status, completeness }) => {
+  if (completeness==='preview-only') return <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-disabled)' }}>— n/a</span>;
+  if (status==='processing') return <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--accent-600)', display:'flex', alignItems:'center', gap:'3px' }}><PulsingDot/> proc.</span>;
+  const map = { complete:'var(--success-700)', pending:'var(--text-muted)', failed:'var(--danger-700)' };
+  const sym = { complete:'●', pending:'○', failed:'✕' };
+  return <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:map[status]||'var(--text-muted)' }}>{sym[status]||'—'} {status||'—'}</span>;
+};
+
+const ExpandedRow = ({ article }) => (
+  <div style={{ background:'var(--bg-inset)', borderTop:'1px solid var(--border-subtle)', borderBottom:'1px solid var(--border-default)', padding:'10px 16px 12px 32px' }}>
+    {article.signposts.length>0 && <>
+      <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'4px' }}>Author Signposts</div>
+      {article.signposts.map((s,i)=><div key={i} style={{ fontFamily:"'Inter',sans-serif", fontStyle:'italic', fontSize:'11px', color:'var(--text-secondary)', borderLeft:'2px solid var(--border-elevated)', paddingLeft:'8px', marginBottom:'3px', lineHeight:1.45 }}>{s}</div>)}
+    </>}
+    {article.claims.length>0 && <>
+      <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em', margin:'8px 0 4px' }}>Cited Claims ({article.claims.length})</div>
+      {article.claims.map((c,i)=>(
+        <div key={i} style={{ fontFamily:"'Inter',sans-serif", fontSize:'11px', color:'var(--text-primary)', padding:'4px 8px', background:'var(--bg-elevated)', border:'1px solid var(--border-default)', borderRadius:'2px', marginBottom:'3px', lineHeight:1.4 }}>
+          {c.text}
+          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', marginTop:'2px' }}>attributed_to: {c.attribution} · claim_type: {c.type} · {article.published}</div>
+        </div>
+      ))}
+    </>}
+    {article.blocks.length>0 && <>
+      <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em', margin:'8px 0 4px' }}>Structured Technical Content ({article.blocks.length})</div>
+      {article.blocks.map((b,i)=><div key={i} style={{ fontFamily:"'Inter',sans-serif", fontSize:'11px', color:'var(--info-700)', padding:'4px 8px', background:'var(--info-100)', border:'1px solid var(--info-600)', borderRadius:'2px', marginBottom:'3px', lineHeight:1.4 }}>{b.name} — {b.type} · kit_candidate: {b.kitCandidate?'true':'false'}</div>)}
+    </>}
+    {article.completeness==='preview-only' && <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--text-muted)', padding:'4px 0' }}>◐ preview-only — source did not provide full content (source-not-provided · Charter P9)</div>}
+  </div>
+);
+
+const CorpusExplorer = ({ articles = ARTICLES }) => {
+  const [expanded, setExpanded] = React.useState('a3f2c1d0');
+  const [filterType, setFilterType] = React.useState('all');
+  const [filterComp, setFilterComp] = React.useState('all');
+
+  const filtered = articles.filter(a=>{
+    if (filterType!=='all' && a.contentType!==filterType) return false;
+    if (filterComp!=='all' && a.completeness!==filterComp) return false;
+    return true;
+  });
+
+  const sel = { background:'var(--bg-active)', borderLeft:'2px solid var(--border-focus)', paddingLeft:'10px' };
+  const unsel = { background:'transparent', borderLeft:'2px solid transparent' };
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', background:'var(--bg-surface)', border:'1px solid var(--border-default)', flex:1, minWidth:0, overflow:'hidden' }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 12px', borderBottom:'1px solid var(--border-default)', background:'var(--bg-header)', flexShrink:0 }}>
+        <span style={{ fontFamily:"'Inter',sans-serif", fontSize:'12px', fontWeight:700, color:'var(--text-heading)' }}>Corpus Explorer</span>
+        <div style={{ display:'flex', gap:'6px', alignItems:'center' }}>
+          {[['filterType',[['all','all types'],['Nate-feature-article','feature'],['Nate-executive-briefing','executive']],filterType,setFilterType],['filterComp',[['all','all completeness'],['complete','complete'],['preview-only','preview-only'],['partial','partial']],filterComp,setFilterComp]].map(([key,opts,val,set])=>(
+            <select key={key} value={val} onChange={e=>set(e.target.value)} style={{ height:'24px', padding:'0 6px', background:'var(--bg-elevated)', border:'1px solid var(--border-default)', borderRadius:'4px', fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--text-secondary)', outline:'none', cursor:'pointer' }}>
+              {opts.map(([v,l])=><option key={v} value={v}>{l}</option>)}
+            </select>
+          ))}
+          <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)' }}>{filtered.length} articles</span>
+        </div>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 88px 82px 98px 72px 36px', gap:'8px', padding:'4px 12px', borderBottom:'1px solid var(--border-default)', background:'var(--bg-inset)', flexShrink:0 }}>
+        {['Title','Published','Type','Completeness','Embedding','Kits'].map((h,i)=>(
+          <div key={h} style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.07em', textAlign: i===5?'right':'left' }}>{h}</div>
+        ))}
+      </div>
+      <div style={{ flex:1, overflowY:'auto' }}>
+        {filtered.map(article=>{
+          const isOpen = expanded===article.id;
+          const cp = COMPLETENESS[article.completeness];
+          const ct = CT[article.contentType];
+          return (
+            <React.Fragment key={article.id}>
+              <div onClick={()=>setExpanded(isOpen?null:article.id)} style={{ display:'grid', gridTemplateColumns:'1fr 88px 82px 98px 72px 36px', gap:'8px', alignItems:'center', padding:'0 10px', height:'36px', borderBottom:'1px solid var(--border-subtle)', cursor:'pointer', transition:'background 150ms', ...(isOpen?sel:unsel) }}>
+                <div style={{ display:'flex', alignItems:'center', gap:'6px', minWidth:0 }}>
+                  <span style={{ fontSize:'9px', color:isOpen?'var(--accent-600)':'var(--text-muted)', transform:isOpen?'rotate(90deg)':'none', display:'inline-block', transition:'transform 150ms', flexShrink:0 }}>▶</span>
+                  <span style={{ fontFamily:"'Inter',sans-serif", fontSize:'12px', color:'var(--text-primary)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{article.title}</span>
+                </div>
+                <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--text-muted)' }}>{article.published}</span>
+                <span style={{ display:'inline-flex', padding:'1px 5px', borderRadius:'2px', background:ct?.bg, color:ct?.color, border:`1px solid ${ct?.border}`, fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700 }}>{ct?.short}</span>
+                <span style={{ display:'inline-flex', alignItems:'center', gap:'3px', padding:'1px 5px', borderRadius:'2px', background:cp?.bg, color:cp?.color, border:`1px solid ${cp?.border}`, fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700 }}>{cp?.sym} {article.completeness}</span>
+                <EmbStatus status={article.embeddingStatus} completeness={article.completeness} />
+                <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:article.kitCount>0?'var(--text-secondary)':'var(--text-disabled)', textAlign:'right' }}>{article.kitCount>0?article.kitCount:'—'}</span>
+              </div>
+              {isOpen && <ExpandedRow article={article} />}
+            </React.Fragment>
+          );
+        })}
+      </div>
+      <div style={{ display:'flex', gap:'14px', padding:'6px 12px', borderTop:'1px solid var(--border-default)', background:'var(--bg-inset)', flexShrink:0 }}>
+        {[['complete','var(--success-600)','●'],['preview-only','var(--info-600)','◐'],['partial','var(--warning-600)','◑']].map(([c,col,sym])=>(
+          <span key={c} style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', display:'flex', alignItems:'center', gap:'3px' }}>
+            <span style={{color:col}}>{sym}</span> {articles.filter(a=>a.completeness===c).length} {c}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ── RetrievalLifecycle ────────────────────────────────────────────────────
+
+const TABS = [
+  { id:'targeted',    label:'Targeted',    icon:'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
+  { id:'inferential', label:'Inferential', icon:'M22 12h-4l-3 9L9 3l-3 9H2' },
+  { id:'framing',     label:'Framing',     icon:'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+  { id:'audit',       label:'Audit',       icon:'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+  { id:'evaluative',  label:'Evaluative',  icon:'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' },
+  { id:'kit-status',  label:'Kit Status',  icon:'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 10V7', count:1 },
+];
+
+const rl = {
+  panel: { display:'flex', flexDirection:'column', background:'var(--bg-surface)', border:'1px solid var(--border-default)', width:'320px', flexShrink:0, overflow:'hidden' },
+  header: { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 12px', borderBottom:'1px solid var(--border-default)', background:'var(--bg-header)', flexShrink:0 },
+  qform: { padding:'10px 12px', borderBottom:'1px solid var(--border-default)', display:'flex', flexDirection:'column', gap:'6px', background:'var(--bg-surface)' },
+  qinput: { width:'100%', height:'30px', paddingLeft:'28px', paddingRight:'8px', background:'var(--bg-elevated)', border:'1px solid var(--border-default)', borderRadius:'4px', fontFamily:"'JetBrains Mono',monospace", fontSize:'11px', color:'var(--text-primary)', outline:'none' },
+  runBtn: { height:'30px', padding:'0 12px', background:'var(--accent-600)', border:'none', borderRadius:'4px', fontFamily:"'JetBrains Mono',monospace", fontSize:'11px', fontWeight:700, color:'var(--text-inverse)', cursor:'pointer' },
+  fsel: { height:'26px', padding:'0 6px', background:'var(--bg-elevated)', border:'1px solid var(--border-default)', borderRadius:'4px', fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--text-secondary)', outline:'none', cursor:'pointer' },
+  flabel: { fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.07em', flexShrink:0 },
+  rhead: { display:'flex', justifyContent:'space-between', padding:'5px 12px', borderBottom:'1px solid var(--border-subtle)', background:'var(--bg-inset)' },
+  rmeta: { fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)' },
+  rrow: { padding:'8px 12px', borderBottom:'1px solid var(--border-subtle)' },
+  sblock: { padding:'10px 12px' },
+  slabel: { fontFamily:"'JetBrains Mono',monospace", fontSize:'8px', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'4px', marginTop:'6px' },
+  arow: { display:'flex', justifyContent:'space-between', alignItems:'center', padding:'4px 0', borderBottom:'1px solid var(--border-subtle)' },
+  alabel: { fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--text-muted)' },
+  aval: { fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', fontWeight:500, color:'var(--text-secondary)' },
+  sbtn: { padding:'2px 8px', background:'var(--bg-inset)', border:'1px solid var(--border-default)', borderRadius:'2px', fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', cursor:'pointer' },
+  sbtnA: { background:'var(--accent-100)', border:'1px solid var(--accent-border)', color:'var(--accent-700)', fontWeight:700 },
+};
+
+const QForm = ({ placeholder, onRun, filters }) => {
+  const [q,setQ] = React.useState('');
+  return (
+    <div style={rl.qform}>
+      <div style={{ display:'flex', gap:'6px' }}>
+        <div style={{ position:'relative', flex:1 }}>
+          <svg style={{ position:'absolute', left:'8px', top:'50%', transform:'translateY(-50%)', color:'var(--text-disabled)', pointerEvents:'none' }} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input style={rl.qinput} value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&onRun&&onRun(q)} placeholder={placeholder} />
+        </div>
+        <button style={rl.runBtn} onClick={()=>onRun&&onRun(q)}>Run</button>
+      </div>
+      {filters}
+    </div>
+  );
+};
+
+const ResultRow = ({ title, score, excerpt, published, contentType, completeness }) => {
+  const ctShort = contentType==='Nate-feature-article'?'feature':'executive';
+  return (
+    <div style={rl.rrow}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'8px', marginBottom:'3px' }}>
+        <span style={{ fontFamily:"'Inter',sans-serif", fontSize:'11px', color:'var(--text-primary)', lineHeight:1.4 }}>{title}</span>
+        {score && <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'11px', fontWeight:700, color:'var(--accent-600)', flexShrink:0 }}>{score.toFixed(3)}</span>}
+      </div>
+      {excerpt && <div style={{ fontFamily:"'Inter',sans-serif", fontStyle:'italic', fontSize:'10px', color:'var(--text-secondary)', lineHeight:1.5, marginBottom:'3px' }}>"{excerpt}"</div>}
+      <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)' }}>{published} · {ctShort} · {completeness}</div>
+    </div>
+  );
+};
+
+const TargetedTab = () => (
+  <div>
+    <QForm placeholder="article, claim, signpost, structured_block…" filters={
+      <div style={{ display:'flex', gap:'6px', alignItems:'center' }}>
+        <span style={rl.flabel}>type</span>
+        <select style={rl.fsel}><option>any type</option><option>feature-article</option><option>executive-briefing</option></select>
+        <span style={rl.flabel}>target</span>
+        <select style={rl.fsel}><option>article</option><option>claim</option><option>signpost</option><option>structured_block</option></select>
+      </div>
+    }/>
+    <div style={rl.rhead}><span style={rl.rmeta}>3 results · "multi-agent trust"</span><span style={rl.rmeta}>target: article</span></div>
+    <ResultRow title="The Orchestration Problem: How Multi-Agent Systems Break" score={0.924} excerpt="Trust between agents is not symmetric…" published="2026-04-17" contentType="Nate-feature-article" completeness="complete"/>
+    <ResultRow title="Credential vs. Capability: What Agents Actually Trade" score={0.847} excerpt="Multi-agent coordination fails not on capability gaps but on trust-signaling gaps…" published="2026-03-28" contentType="Nate-feature-article" completeness="partial"/>
+    <ResultRow title="Executive Brief: AI Infrastructure Spend — Week of Apr 14" score={0.711} excerpt={null} published="2026-04-14" contentType="Nate-executive-briefing" completeness="preview-only"/>
+  </div>
+);
+
+const InferentialTab = () => (
+  <div>
+    <QForm placeholder="question about Nate's positions or arguments…"/>
+    <div style={rl.rhead}><span style={rl.rmeta}>synthesis · 3 sources · 2026-02 → 2026-04</span></div>
+    <div style={rl.sblock}>
+      <p style={{ fontFamily:"'Inter',sans-serif", fontSize:'12px', color:'var(--text-primary)', lineHeight:'var(--lh-relaxed)', marginBottom:'8px' }}>
+        Nate's position on multi-agent coordination shifted materially between February and April 2026. Early captures frame orchestration as a sequential hand-off problem. Later captures treat it as a concurrent trust-negotiation problem — a meaningful trajectory delta.
+      </p>
+      <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--accent-700)', marginBottom:'8px', padding:'4px 8px', background:'var(--accent-100)', border:'1px solid var(--accent-border)', borderRadius:'2px' }}>
+        Δ temporal delta: framing shifted from sequential → concurrent · Feb 2026 → Apr 2026
+      </div>
+      <div style={rl.slabel}>Sources</div>
+      {[['The Orchestration Problem…','2026-04-17'],['Credential vs. Capability…','2026-03-28'],['The Subscription Decision Framework…','2026-02-28']].map(([t,d])=>(
+        <div key={d} style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', marginBottom:'2px' }}>· {t} — {d}</div>
+      ))}
+    </div>
+  </div>
+);
+
+const FramingTab = () => (
+  <div>
+    <QForm placeholder="rhetorical pattern, lens, or framing question…"/>
+    <div style={rl.rhead}><span style={rl.rmeta}>framing · signposts + structured_blocks</span></div>
+    <div style={rl.sblock}>
+      <p style={{ fontFamily:"'Inter',sans-serif", fontSize:'12px', color:'var(--text-primary)', lineHeight:'var(--lh-relaxed)', marginBottom:'8px' }}>
+        Nate consistently frames trust failures as architectural deficits. Recurring pattern: problem stated as binary → reframed as gradient → framework proposed.
+      </p>
+      <div style={rl.slabel}>Matched Signposts</div>
+      {['"The key insight here…"','"What I\'m watching for…"','"The contrarian take…"'].map((s,i)=>(
+        <div key={i} style={{ fontFamily:"'Inter',sans-serif", fontStyle:'italic', fontSize:'10px', color:'var(--text-secondary)', borderLeft:'2px solid var(--border-elevated)', paddingLeft:'7px', marginBottom:'3px', lineHeight:1.4 }}>{s}</div>
+      ))}
+      <div style={rl.slabel}>Matched Structured Blocks</div>
+      {['Trust Gradient Model — framework','Credential Ladder — taxonomy'].map((b,i)=>(
+        <div key={i} style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--info-700)', padding:'2px 6px', background:'var(--info-100)', border:'1px solid var(--info-600)', borderRadius:'2px', marginBottom:'3px' }}>{b}</div>
+      ))}
+    </div>
+  </div>
+);
+
+const AuditTab = () => {
+  const [scope,setScope] = React.useState('completeness');
+  const scopes = ['coverage','completeness','gaps','ingestion-health'];
+  const ARow = ({label,value,vc}) => <div style={rl.arow}><span style={rl.alabel}>{label}</span><span style={{...rl.aval,color:vc||'var(--text-secondary)'}}>{value}</span></div>;
+  return (
+    <div>
+      <div style={{ padding:'8px 12px', borderBottom:'1px solid var(--border-default)', display:'flex', gap:'4px', flexWrap:'wrap', background:'var(--bg-surface)' }}>
+        {scopes.map(s=><button key={s} onClick={()=>setScope(s)} style={{...rl.sbtn,...(scope===s?rl.sbtnA:{})}}>{s}</button>)}
+      </div>
+      <div style={{ padding:'10px 12px' }}>
+        {scope==='coverage'&&<><ARow label="total_articles" value="47"/><ARow label="Nate-feature-article" value="34"/><ARow label="Nate-executive-briefing" value="13"/><ARow label="date_range" value="2026-02-12 → 2026-05-02"/></>}
+        {scope==='completeness'&&<><ARow label="complete" value="31" vc="var(--success-700)"/><ARow label="preview-only" value="12" vc="var(--info-700)"/><ARow label="partial" value="4" vc="var(--warning-700)"/><div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:'9px',color:'var(--text-muted)',marginTop:'8px',lineHeight:1.6}}>preview-only = source-not-provided · partial = system-failed (Charter P9)</div></>}
+        {scope==='gaps'&&<><div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:'10px',color:'var(--warning-700)',marginBottom:'6px'}}>▲ 1 open gap window</div><ARow label="gap_start" value="2026-02-12"/><ARow label="gap_end" value="2026-02-21"/><ARow label="est. articles" value="~10"/><ARow label="resolution_path" value="email-backfill" vc="var(--info-700)"/><ARow label="status" value="acknowledged" vc="var(--accent-700)"/></>}
+        {scope==='ingestion-health'&&<><ARow label="total_events" value="213"/><ARow label="ingestion_succeeded" value="47" vc="var(--success-700)"/><ARow label="ingestion_failed" value="3" vc="var(--danger-700)"/><ARow label="embedding_failed" value="8" vc="var(--danger-700)"/><ARow label="retry_attempted" value="11" vc="var(--warning-700)"/><ARow label="orphan_events" value="2" vc="var(--danger-700)"/><ARow label="source-not-provided" value="12" vc="var(--info-700)"/><ARow label="system-failed" value="4" vc="var(--warning-700)"/></>}
+      </div>
+    </div>
+  );
+};
+
+const EvaluativeTab = () => {
+  const sessions = [
+    { date:'2026-05-01', disposition:'maintain-current-tier', summary:'47 articles captured, strong feature coverage. Executive briefings improving post-upgrade. No degradation signals.' },
+    { date:'2026-04-01', disposition:'upgrade-candidate', summary:'Free-tier preview-only rate too high (62%). Paid tier upgrade recommended to unlock full executive briefing access.' },
+  ];
+  const ds = {
+    'maintain-current-tier': { bg:'var(--bg-inset)', color:'var(--text-secondary)', border:'1px solid var(--border-default)' },
+    'upgrade-candidate':     { bg:'var(--success-100)', color:'var(--success-900)', border:'1px solid var(--success-500)' },
+    'degradation-signal':    { bg:'var(--warning-100)', color:'var(--warning-900)', border:'1px solid var(--warning-600)' },
+    'abandon-signal':        { bg:'var(--danger-100)', color:'var(--danger-900)', border:'1px solid var(--danger-600)' },
+  };
+  return (
+    <div>
+      <div style={rl.rhead}><span style={rl.rmeta}>Nate B. Jones · {sessions.length} sessions · upgrade-candidate → maintain</span></div>
+      {sessions.map((s,i)=>{
+        const d = ds[s.disposition];
+        return (
+          <div key={i} style={{ ...rl.rrow, borderLeft: i===0?'3px solid var(--border-focus)':'' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'4px' }}>
+              <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', color:'var(--text-muted)' }}>{s.date}</span>
+              <span style={{ display:'inline-flex', padding:'1px 6px', borderRadius:'2px', fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', fontWeight:700, background:d.bg, color:d.color, border:d.border }}>{s.disposition}</span>
+            </div>
+            <div style={{ fontFamily:"'Inter',sans-serif", fontSize:'11px', color:'var(--text-secondary)', lineHeight:1.5 }}>{s.summary}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const KitStatusTab = () => {
+  const [filter,setFilter] = React.useState('all');
+  const kits = [
+    { name:'Trust Gradient Model Prompt Kit', article:'The Orchestration Problem…', published:'2026-04-17', state:'unevaluated', stampDate:null, execCtx:null, nextRun:null, trigger:null },
+    { name:'Credential Ladder Analysis', article:'Credential vs. Capability…', published:'2026-03-28', state:'conditionally-deferred', stampDate:'2026-04-20', execCtx:'LucidLink interview prep 2026-04-20', trigger:'after Nate publishes follow-up on agent credentials' },
+    { name:'Prompt Architecture Taxonomy Kit', article:'Prompt Engineering Is Dead…', published:'2026-03-14', state:'repeat-scheduled', stampDate:'2026-04-15', execCtx:'Monthly architecture review 2026-04-15', nextRun:'2026-06-14' },
+    { name:'Subscription Decision Framework', article:'The Subscription Decision…', published:'2026-02-28', state:'one-time', stampDate:'2026-03-10', execCtx:'Subscription review Q1 2026' },
+  ];
+  const filters = ['all','unevaluated','repeat-scheduled','conditionally-deferred','one-time'];
+  const filtered = filter==='all'?kits:kits.filter(k=>k.state===filter);
+  const ss = {
+    'unevaluated':           { bg:'var(--bg-inset)',    color:'var(--text-muted)',    border:'1px solid var(--border-default)' },
+    'repeat-scheduled':      { bg:'var(--success-100)', color:'var(--success-900)',   border:'1px solid var(--success-500)' },
+    'conditionally-deferred':{ bg:'var(--accent-100)',  color:'var(--accent-700)',    border:'1px solid var(--accent-border)' },
+    'one-time':              { bg:'var(--bg-inset)',    color:'var(--text-secondary)', border:'1px solid var(--border-default)' },
+  };
+  return (
+    <div>
+      <div style={{ padding:'8px 12px', borderBottom:'1px solid var(--border-default)', display:'flex', gap:'4px', flexWrap:'wrap', background:'var(--bg-surface)' }}>
+        {filters.map(f=><button key={f} onClick={()=>setFilter(f)} style={{...rl.sbtn,...(filter===f?rl.sbtnA:{})}}>{f}</button>)}
+      </div>
+      {filtered.map((k,i)=>{
+        const s = ss[k.state];
+        return (
+          <div key={i} style={rl.rrow}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'6px', marginBottom:'3px' }}>
+              <span style={{ fontFamily:"'Inter',sans-serif", fontSize:'11px', color:'var(--text-primary)', lineHeight:1.35 }}>{k.name}</span>
+              <span style={{ display:'inline-flex', padding:'1px 5px', borderRadius:'2px', fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', fontWeight:700, flexShrink:0, background:s.bg, color:s.color, border:s.border }}>{k.state}</span>
+            </div>
+            <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)', marginBottom:'2px' }}>{k.article} · {k.published}</div>
+            {k.stampDate && <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)' }}>stamp_date: {k.stampDate}</div>}
+            {k.execCtx && <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-secondary)', marginTop:'1px' }}>execution_context: {k.execCtx}</div>}
+            {k.nextRun && <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--success-700)', marginTop:'1px' }}>next_run_date: {k.nextRun}</div>}
+            {k.trigger && <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--accent-600)', marginTop:'1px' }}>trigger_condition: {k.trigger}</div>}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const RetrievalLifecycle = () => {
+  const [active, setActive] = React.useState('targeted');
+  const content = { targeted:<TargetedTab/>, inferential:<InferentialTab/>, framing:<FramingTab/>, audit:<AuditTab/>, evaluative:<EvaluativeTab/>, 'kit-status':<KitStatusTab/> };
+  return (
+    <div style={rl.panel}>
+      <div style={rl.header}>
+        <span style={{ fontFamily:"'Inter',sans-serif", fontSize:'12px', fontWeight:700, color:'var(--text-heading)' }}>Retrieval &amp; Lifecycle</span>
+        <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:'9px', color:'var(--text-muted)' }}>11 MCP tools</span>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', borderBottom:'1px solid var(--border-default)', flexShrink:0, background:'var(--bg-inset)' }}>
+        {TABS.map(tab=>{
+          const isActive = active===tab.id;
+          return (
+            <div key={tab.id} onClick={()=>setActive(tab.id)} style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'4px', padding:'6px 4px', fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', cursor:'pointer', whiteSpace:'nowrap', color: isActive?'var(--accent-700)':'var(--text-muted)', borderBottom: isActive?'2px solid var(--accent-600)':'2px solid transparent', background: isActive?'var(--bg-active)':'transparent', fontWeight: isActive?700:400, borderRight:'1px solid var(--border-subtle)', transition:'color 150ms, background 150ms' }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><path d={tab.icon}/></svg>
+              {tab.label}
+              {tab.count && <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', minWidth:'13px', height:'12px', padding:'0 3px', background:'var(--accent-100)', border:'1px solid var(--accent-border)', borderRadius:'2px', fontSize:'8px', fontWeight:700, color:'var(--accent-700)' }}>{tab.count}</span>}
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ flex:1, overflowY:'auto', background:'var(--bg-surface)' }}>
+        {content[active]}
+      </div>
+    </div>
+  );
+};
+
+// ── App shell ─────────────────────────────────────────────────────────────
+
+const App = () => (
+  <div style={{ display:'flex', flexDirection:'column', height:'100vh', background:'var(--bg-base)', overflow:'hidden' }}>
+    <ProviderBar />
+    <div style={{ display:'flex', flex:1, overflow:'hidden', padding:'10px', gap:'8px' }}>
+      <IngestionMonitor />
+      <CorpusExplorer />
+      <RetrievalLifecycle />
+    </div>
+  </div>
+);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>

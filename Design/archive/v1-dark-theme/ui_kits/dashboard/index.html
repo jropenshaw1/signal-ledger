@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Ledger — Operational Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+  body {
+    background: #0A0C0F;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #E2E8F0;
+  }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #0A0C0F; }
+  ::-webkit-scrollbar-thumb { background: #1E2530; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2D3748; }
+  select, input, button { font-family: inherit; }
+  option { background: #111418; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="ProviderBar.jsx?v=2"></script>
+<script type="text/babel" src="IngestionMonitor.jsx?v=2"></script>
+<script type="text/babel" src="CorpusExplorer.jsx?v=2"></script>
+<script type="text/babel" src="RetrievalLifecycle.jsx?v=3"></script>
+
+<script type="text/babel">
+// ── App shell ─────────────────────────────────────────────────────────────
+
+const App = () => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#0A0C0F', overflow: 'hidden' }}>
+      {/* Provider bar — fixed top */}
+      <ProviderBar />
+
+      {/* 3-column body */}
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', background: '#0A0C0F', padding: '10px', gap: '8px' }}>
+        {/* Left — Ingestion Monitor */}
+        <IngestionMonitor />
+
+        {/* Center — Corpus Explorer */}
+        <CorpusExplorer />
+
+        {/* Right — Retrieval & Lifecycle */}
+        <RetrievalLifecycle />
+      </div>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>

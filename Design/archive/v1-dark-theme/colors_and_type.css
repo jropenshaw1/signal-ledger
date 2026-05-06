@@ -1,0 +1,397 @@
+/*
+ * Signal Ledger — Design Tokens
+ * CSS Custom Properties: colors, typography, spacing, borders, shadows
+ * Operational console theme — dark, data-dense, agent-first
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─────────────────────────────────────────────────────────────────────
+   BASE COLOR PALETTE
+───────────────────────────────────────────────────────────────────── */
+:root {
+
+  /* Backgrounds — depth hierarchy */
+  --bg-base:          #0A0C0F;   /* deepest; page/viewport background */
+  --bg-surface:       #111418;   /* panel backgrounds */
+  --bg-elevated:      #181D22;   /* cards, drawers, elevated content */
+  --bg-hover:         #1E252C;   /* hover state backgrounds */
+  --bg-active:        #0D1520;   /* selected / active row background */
+  --bg-inset:         #080A0C;   /* inset areas, code blocks */
+  --bg-sub-row:       #0D1118;   /* expanded article sub-content */
+
+  /* Borders */
+  --border-subtle:    #151A20;   /* extremely subtle, near-invisible */
+  --border-default:   #1E2530;   /* default panel/card borders */
+  --border-elevated:  #2D3748;   /* elevated / more visible borders */
+  --border-focus:     #3B82F6;   /* focus ring, active tab underline */
+
+  /* Primary accent — blue */
+  --blue-300:         #93C5FD;
+  --blue-400:         #60A5FA;
+  --blue-500:         #3B82F6;   /* primary action, links, active */
+  --blue-600:         #2563EB;
+  --blue-700:         #1D4ED8;
+  --blue-900:         #1E3A5F;   /* tinted backgrounds */
+
+  /* Success — green */
+  --green-300:        #86EFAC;
+  --green-400:        #4ADE80;
+  --green-500:        #22C55E;   /* complete, succeeded */
+  --green-600:        #16A34A;
+  --green-900:        #14291C;   /* tinted bg for complete */
+
+  /* Warning — amber */
+  --amber-300:        #FCD34D;
+  --amber-400:        #FBBF24;
+  --amber-500:        #F59E0B;   /* partial (system failed), retry */
+  --amber-600:        #D97706;
+  --amber-900:        #2C1F06;   /* tinted bg for partial */
+
+  /* Danger — red */
+  --red-300:          #FCA5A5;
+  --red-400:          #F87171;
+  --red-500:          #EF4444;   /* failed, terminal errors */
+  --red-600:          #DC2626;
+  --red-900:          #2C0F0F;   /* tinted bg for failed */
+
+  /* Preview-only — violet (source-gated, NOT a system failure) */
+  --violet-300:       #C4B5FD;
+  --violet-400:       #A78BFA;
+  --violet-500:       #8B5CF6;   /* preview-only capture completeness */
+  --violet-600:       #7C3AED;
+  --violet-900:       #1E1040;   /* tinted bg for preview-only */
+
+  /* Neutral — slate */
+  --slate-100:        #F1F5F9;
+  --slate-200:        #E2E8F0;   /* primary text */
+  --slate-300:        #CBD5E1;   /* secondary labels */
+  --slate-400:        #94A3B8;   /* secondary text, pending dots */
+  --slate-500:        #64748B;   /* tertiary / muted */
+  --slate-600:        #475569;   /* disabled, placeholder */
+  --slate-700:        #334155;
+  --slate-800:        #1E293B;
+  --slate-900:        #0F172A;
+
+  /* ─────────────────────────────────────────────────────────────────
+     SEMANTIC COLOR TOKENS
+  ───────────────────────────────────────────────────────────────── */
+
+  /* Text */
+  --text-primary:     var(--slate-200);
+  --text-secondary:   var(--slate-400);
+  --text-tertiary:    var(--slate-600);
+  --text-disabled:    var(--slate-700);
+  --text-inverse:     var(--bg-base);
+  --text-link:        var(--blue-400);
+  --text-link-hover:  var(--blue-300);
+  --text-danger:      var(--red-400);
+  --text-warning:     var(--amber-400);
+  --text-success:     var(--green-400);
+
+  /* Status — capture completeness */
+  --status-complete:         var(--green-500);
+  --status-complete-bg:      var(--green-900);
+  --status-complete-text:    var(--green-300);
+  --status-preview:          var(--violet-500);
+  --status-preview-bg:       var(--violet-900);
+  --status-preview-text:     var(--violet-300);
+  --status-partial:          var(--amber-500);
+  --status-partial-bg:       var(--amber-900);
+  --status-partial-text:     var(--amber-300);
+  --status-failed:           var(--red-500);
+  --status-failed-bg:        var(--red-900);
+  --status-failed-text:      var(--red-300);
+  --status-pending:          var(--slate-400);
+  --status-pending-bg:       #161C23;
+  --status-pending-text:     var(--slate-300);
+  --status-processing:       var(--blue-400);
+  --status-processing-bg:    var(--blue-900);
+  --status-processing-text:  var(--blue-300);
+
+  /* Gap window statuses */
+  --gap-open:         var(--amber-500);
+  --gap-acknowledged: var(--blue-400);
+  --gap-resolved:     var(--green-500);
+  --gap-unresolvable: var(--slate-500);
+
+  /* Tier dispositions */
+  --tier-maintain:    var(--slate-400);
+  --tier-upgrade:     var(--green-500);
+  --tier-degradation: var(--amber-500);
+  --tier-abandon:     var(--red-500);
+
+  /* Interactive */
+  --interactive-default:  var(--blue-500);
+  --interactive-hover:    var(--blue-400);
+  --interactive-active:   var(--blue-600);
+  --interactive-disabled: var(--slate-700);
+
+  /* ─────────────────────────────────────────────────────────────────
+     TYPOGRAPHY
+  ───────────────────────────────────────────────────────────────── */
+
+  /* Font families */
+  --font-mono:   'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+  --font-sans:   'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Font weights */
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* Type scale — px → rem (base 16px) */
+  --text-2xs:   0.625rem;   /*  10px — micro labels, event type chips */
+  --text-xs:    0.6875rem;  /*  11px — table data, timestamps, IDs */
+  --text-sm:    0.8125rem;  /*  13px — body copy, article rows */
+  --text-base:  0.875rem;   /*  14px — standard UI text */
+  --text-md:    0.9375rem;  /*  15px — panel section headers */
+  --text-lg:    1.125rem;   /*  18px — panel titles */
+  --text-xl:    1.25rem;    /*  20px — primary metrics */
+  --text-2xl:   1.5rem;     /*  24px — hero metrics in provider bar */
+
+  /* Line heights */
+  --lh-tight:   1.35;    /* data tables, badges */
+  --lh-normal:  1.5;     /* standard UI */
+  --lh-relaxed: 1.65;    /* synthesis prose output */
+
+  /* Letter spacing */
+  --ls-tight:   -0.02em;
+  --ls-normal:   0;
+  --ls-wide:     0.04em;  /* uppercase labels */
+  --ls-wider:    0.08em;  /* section/tab labels */
+
+  /* ─────────────────────────────────────────────────────────────────
+     SPACING SCALE (4px base unit)
+  ───────────────────────────────────────────────────────────────── */
+  --space-0:    0;
+  --space-0-5:  2px;
+  --space-1:    4px;
+  --space-1-5:  6px;
+  --space-2:    8px;
+  --space-3:    12px;
+  --space-4:    16px;
+  --space-5:    20px;
+  --space-6:    24px;
+  --space-8:    32px;
+  --space-10:   40px;
+  --space-12:   48px;
+  --space-16:   64px;
+
+  /* Component-specific spacing */
+  --padding-dense:     var(--space-2);     /*  8px — compact rows */
+  --padding-standard:  var(--space-3);     /* 12px — standard padding */
+  --padding-relaxed:   var(--space-4);     /* 16px — panel padding */
+  --gap-panel:         var(--space-3);     /* 12px — between panels */
+  --gap-section:       var(--space-4);     /* 16px — intra-panel sections */
+  --row-height:        36px;               /* standard table row */
+  --row-height-compact: 28px;              /* event feed rows */
+  --provider-bar-height: 56px;             /* fixed top bar */
+
+  /* ─────────────────────────────────────────────────────────────────
+     BORDER RADIUS
+  ───────────────────────────────────────────────────────────────── */
+  --radius-0:   0;         /* panels, tables — no rounding */
+  --radius-sm:  2px;       /* status badges */
+  --radius-md:  4px;       /* buttons, inputs, chips */
+  --radius-lg:  6px;       /* modals, dropdowns */
+  --radius-xl:  8px;       /* cards in rare cases */
+
+  /* ─────────────────────────────────────────────────────────────────
+     SHADOWS
+  ───────────────────────────────────────────────────────────────── */
+  --shadow-none:  none;
+  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md:    0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-lg:    0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-panel: inset 0 1px 0 rgba(255, 255, 255, 0.03);  /* subtle top highlight */
+
+  /* ─────────────────────────────────────────────────────────────────
+     TRANSITION
+  ───────────────────────────────────────────────────────────────── */
+  --transition-fast:   150ms ease;
+  --transition-base:   200ms ease;
+  --transition-slow:   300ms ease;
+
+  /* ─────────────────────────────────────────────────────────────────
+     Z-INDEX
+  ───────────────────────────────────────────────────────────────── */
+  --z-base:     1;
+  --z-dropdown: 100;
+  --z-modal:    200;
+  --z-toast:    300;
+  --z-overlay:  400;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   SEMANTIC TYPE ROLES (HTML element mappings)
+───────────────────────────────────────────────────────────────────── */
+
+/* Apply base resets and globals */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-base);
+}
+
+/* Panel / section headings */
+h1 {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xl);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+h2 {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+h4 {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+  letter-spacing: var(--ls-normal);
+}
+
+h5 {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+}
+
+h6 {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+}
+
+p {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text-primary);
+}
+
+/* Monospaced — data values, IDs, dates, codes */
+code, kbd, pre, .mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--lh-normal);
+  color: var(--text-primary);
+}
+
+pre {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-default);
+  padding: var(--padding-standard);
+  overflow-x: auto;
+}
+
+/* Micro labels — event type chips, table column headers */
+.label-micro {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Table data — the primary reading mode */
+.data {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+/* Synthesis prose — inferential/framing results */
+.synthesis {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text-primary);
+}
+
+/* Timestamps */
+.timestamp {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+}
+
+/* Article IDs, UUIDs, event IDs */
+.uuid {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--text-tertiary);
+  letter-spacing: 0;
+}
+
+/* Score values — cosine similarity */
+.score {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  color: var(--blue-400);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   UTILITY CLASSES
+───────────────────────────────────────────────────────────────────── */
+.text-primary   { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary  { color: var(--text-tertiary); }
+.text-disabled  { color: var(--text-disabled); }
+.text-link      { color: var(--text-link); }
+.text-danger    { color: var(--text-danger); }
+.text-warning   { color: var(--text-warning); }
+.text-success   { color: var(--text-success); }
+
+.bg-base        { background: var(--bg-base); }
+.bg-surface     { background: var(--bg-surface); }
+.bg-elevated    { background: var(--bg-elevated); }
+
+.border-default { border: 1px solid var(--border-default); }
+.border-elevated { border: 1px solid var(--border-elevated); }

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../brand_tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); padding: 0; font-family: var(--font-sans); }
+  .section-label { font-family:var(--font-mono); font-size:8px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent-600); padding:12px 12px 6px; }
+  .query-form { padding:0 12px 10px; border-bottom:1px solid var(--border-default); background:var(--bg-surface); }
+  .query-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+  .query-row:last-child { margin-bottom:0; }
+  .input-wrap { position:relative; flex:1; }
+  .input-icon { position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--text-disabled); pointer-events:none; }
+  .query-input { width:100%; height:32px; padding:0 10px 0 30px; background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:4px; font-family:var(--font-mono); font-size:12px; color:var(--text-primary); outline:none; transition:border-color 150ms; }
+  .query-input:focus { border-color:var(--border-focus); }
+  .query-input::placeholder { color:var(--text-disabled); }
+  .filter-select { height:28px; padding:0 7px; background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:4px; font-family:var(--font-mono); font-size:10px; color:var(--text-secondary); cursor:pointer; outline:none; }
+  .filter-label { font-family:var(--font-mono); font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.07em; flex-shrink:0; }
+  .submit-btn { height:32px; padding:0 14px; background:var(--accent-600); border:none; border-radius:4px; font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--text-inverse); cursor:pointer; flex-shrink:0; transition:background 150ms; }
+  .submit-btn:hover { background:var(--accent-500); }
+  .results-area { background:var(--bg-surface); border:1px solid var(--border-default); border-top:none; }
+  .results-header { display:flex; justify-content:space-between; padding:5px 12px; border-bottom:1px solid var(--border-subtle); background:var(--bg-inset); }
+  .results-meta { font-family:var(--font-mono); font-size:9px; color:var(--text-muted); }
+  .result-row { padding:8px 12px; border-bottom:1px solid var(--border-subtle); }
+  .result-row:last-child { border-bottom:none; }
+  .result-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:3px; }
+  .result-title { font-family:var(--font-sans); font-size:12px; color:var(--text-primary); line-height:1.4; }
+  .result-score { font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--accent-600); flex-shrink:0; }
+  .result-excerpt { font-family:var(--font-sans); font-style:italic; font-size:11px; color:var(--text-secondary); line-height:1.5; margin-bottom:3px; }
+  .result-meta { font-family:var(--font-mono); font-size:9px; color:var(--text-muted); }
+</style>
+</head>
+<body>
+  <div class="section-label">Targeted Retrieval — sl_retrieve_targeted</div>
+  <div class="query-form">
+    <div class="query-row">
+      <div class="input-wrap">
+        <svg class="input-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="query-input" type="text" placeholder="article, claim, signpost, or structured_block…" value="multi-agent coordination trust">
+      </div>
+      <button class="submit-btn">Run</button>
+    </div>
+    <div class="query-row">
+      <span class="filter-label">type</span>
+      <select class="filter-select">
+        <option>any type</option>
+        <option>Nate-feature-article</option>
+        <option>Nate-executive-briefing</option>
+      </select>
+      <span class="filter-label" style="margin-left:8px">target</span>
+      <select class="filter-select">
+        <option>article</option>
+        <option>claim</option>
+        <option>signpost</option>
+        <option>structured_block</option>
+      </select>
+    </div>
+  </div>
+  <div class="results-area">
+    <div class="results-header">
+      <span class="results-meta">3 results · "multi-agent coordination trust"</span>
+      <span class="results-meta">target: article</span>
+    </div>
+    <div class="result-row">
+      <div class="result-top">
+        <span class="result-title">The Orchestration Problem: How Multi-Agent Systems Break</span>
+        <span class="result-score">0.924</span>
+      </div>
+      <div class="result-excerpt">"Trust between agents is not symmetric — the orchestrator may trust sub-agents differently based on capability and failure history…"</div>
+      <div class="result-meta">2026-04-17 · Nate-feature-article · complete · article_id: a3f2c1d0…</div>
+    </div>
+    <div class="result-row">
+      <div class="result-top">
+        <span class="result-title">Credential vs. Capability: What Agents Actually Trade</span>
+        <span class="result-score">0.847</span>
+      </div>
+      <div class="result-excerpt">"Multi-agent coordination fails not on capability gaps but on trust-signaling gaps…"</div>
+      <div class="result-meta">2026-03-28 · Nate-feature-article · partial · article_id: b7e1d4f2…</div>
+    </div>
+    <div class="result-row">
+      <div class="result-top">
+        <span class="result-title">Executive Brief: AI Infrastructure Spend — Week of Apr 14</span>
+        <span class="result-score">0.711</span>
+      </div>
+      <div class="result-excerpt">preview-only — full content not available (source-not-provided · Charter P9)</div>
+      <div class="result-meta">2026-04-14 · Nate-executive-briefing · preview-only · article_id: c9d2e5f3…</div>
+    </div>
+  </div>
+</body>
+</html>

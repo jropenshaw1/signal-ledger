@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../brand_tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); padding: 16px; font-family: var(--font-sans); }
+  .section-label { font-family:var(--font-mono); font-size:8px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent-600); margin:0 0 8px; }
+  /* 3×2 grid tab bar */
+  .tab-grid { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--border-default); border-bottom:none; background:var(--bg-surface); }
+  .tab {
+    display:flex; align-items:center; justify-content:center; gap:5px;
+    padding:7px 6px; font-family:var(--font-mono); font-size:10px;
+    color:var(--text-muted); cursor:pointer; white-space:nowrap;
+    border-bottom:2px solid transparent; border-right:1px solid var(--border-subtle);
+    transition:color 150ms, background 150ms;
+  }
+  .tab:nth-child(3n) { border-right:none; }
+  .tab.active { color:var(--accent-700); border-bottom-color:var(--accent-600); background:var(--bg-active); font-weight:700; }
+  .tab:hover:not(.active) { background:var(--bg-hover); color:var(--text-secondary); }
+  .tab i { flex-shrink:0; }
+  .count-badge { display:inline-flex; align-items:center; justify-content:center; min-width:15px; height:14px; padding:0 3px; background:var(--accent-100); border-radius:2px; font-size:8px; font-weight:700; color:var(--accent-700); border:1px solid var(--accent-border); }
+  .tab-content { background:var(--bg-surface); border:1px solid var(--border-default); border-top:none; padding:12px; min-height:52px; }
+  .content-label { font-family:var(--font-mono); font-size:10px; color:var(--text-muted); }
+  .spacer { height: 20px; }
+  /* Compact variant */
+  .tab-bar-compact { display:flex; border-bottom:1px solid var(--border-default); background:var(--bg-surface); }
+  .tab-compact { display:flex; align-items:center; gap:5px; padding:5px 10px; font-family:var(--font-mono); font-size:10px; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; transition:color 150ms; }
+  .tab-compact.active { color:var(--accent-700); border-bottom-color:var(--accent-600); font-weight:700; }
+  .tab-compact:hover:not(.active) { color:var(--text-secondary); }
+</style>
+</head>
+<body>
+  <div class="section-label">Retrieval &amp; Lifecycle — 3×2 Tab Grid</div>
+  <div class="tab-grid">
+    <div class="tab active">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Targeted
+    </div>
+    <div class="tab">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Inferential
+    </div>
+    <div class="tab">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Framing
+    </div>
+    <div class="tab">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      Audit
+    </div>
+    <div class="tab">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Evaluative
+    </div>
+    <div class="tab">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 10V7"/></svg>
+      Kit Status
+      <span class="count-badge">1</span>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div class="content-label">Active: Targeted — precision lookup by article, claim, signpost, or structured_block. Active tab underline: var(--accent-600) #c2410c</div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="section-label">Compact Variant — Audit sub-navigation</div>
+  <div class="tab-bar-compact">
+    <div class="tab-compact">coverage</div>
+    <div class="tab-compact active">completeness</div>
+    <div class="tab-compact">gaps</div>
+    <div class="tab-compact">ingestion-health
+      <span class="count-badge" style="margin-left:4px">3</span>
+    </div>
+  </div>
+  <div class="tab-content" style="padding:8px">
+    <div class="content-label">Audit sub-scope: completeness distribution</div>
+  </div>
+</body>
+</html>

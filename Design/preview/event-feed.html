@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../brand_tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); font-family: var(--font-mono); }
+
+  .feed-panel { background: var(--bg-surface); border: 1px solid var(--border-default); }
+  .panel-header { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-bottom:1px solid var(--border-default); background:var(--bg-header); }
+  .panel-title { font-family:var(--font-sans); font-size:12px; font-weight:600; color:var(--text-heading); }
+  .panel-meta { font-size:9px; color:var(--text-muted); }
+
+  .erow { display:grid; grid-template-columns:14px 140px 1fr 58px; align-items:center; gap:8px; padding:5px 12px; border-bottom:1px solid var(--border-subtle); min-height:28px; }
+  .erow.fail { background:rgba(185,28,28,0.05); }
+  .dot { font-size:9px; text-align:center; line-height:1; }
+  .etype { font-size:9px; font-weight:500; color:var(--text-muted); letter-spacing:0.03em; white-space:nowrap; }
+  .edetail { font-size:10px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .etime { font-size:9px; color:var(--text-disabled); text-align:right; }
+  .sect { padding:3px 12px; font-size:8px; font-weight:700; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--border-subtle); background:var(--bg-inset); }
+
+  /* Chain block */
+  .chain-block { border-left:2px solid var(--border-default); margin:0 0 0 12px; background:var(--bg-inset); border-bottom:1px solid var(--border-default); }
+  .chain-trigger { display:grid; grid-template-columns:14px 140px 1fr 58px; align-items:center; gap:8px; padding:5px 12px; background:rgba(185,28,28,0.07); border-bottom:1px solid rgba(185,28,28,0.1); min-height:28px; }
+  .chain-wait { display:flex; align-items:center; gap:10px; padding:4px 12px 4px 30px; border-bottom:1px dashed var(--border-subtle); }
+  .wait-line { flex:1; height:1px; background: repeating-linear-gradient(90deg, var(--border-default) 0, var(--border-default) 4px, transparent 4px, transparent 8px); }
+  .wait-label { font-size:9px; font-weight:700; color:var(--warning-700); padding:1px 6px; background:var(--warning-100); border:1px solid var(--warning-600); border-radius:2px; white-space:nowrap; }
+  .wait-arrow { font-size:9px; color:var(--text-muted); }
+  .chain-retry { display:grid; grid-template-columns:14px 140px 1fr 58px; align-items:center; gap:8px; padding:5px 12px; background:rgba(146,64,14,0.05); border-bottom:1px solid rgba(146,64,14,0.08); min-height:28px; }
+  .chain-fail { display:grid; grid-template-columns:14px 140px 1fr 58px; align-items:center; gap:8px; padding:5px 12px; background:rgba(185,28,28,0.07); border-bottom:1px solid rgba(185,28,28,0.1); min-height:28px; }
+  .chain-terminal { display:grid; grid-template-columns:14px 140px 1fr 58px; align-items:center; gap:8px; padding:6px 12px; background:rgba(185,28,28,0.12); border-top:1px solid rgba(185,28,28,0.2); min-height:30px; }
+  .terminal-badge { display:inline-flex; align-items:center; gap:4px; padding:1px 6px; background:var(--danger-100); border:1px solid var(--danger-700); border-radius:2px; font-size:9px; font-weight:700; color:var(--danger-900); white-space:nowrap; }
+  .retry-of-line { padding:2px 12px 2px 46px; font-size:8px; color:var(--text-disabled); border-bottom:1px dotted var(--border-subtle); }
+  .retry-of-link { color:var(--accent-600); }
+
+  .feed-footer { display:flex; gap:14px; padding:6px 12px; border-top:1px solid var(--border-default); background:var(--bg-inset); }
+  .foot-stat { font-size:9px; color:var(--text-muted); display:flex; align-items:center; gap:4px; }
+</style>
+</head>
+<body>
+<div class="feed-panel">
+  <div class="panel-header">
+    <span class="panel-title">Ingestion Monitor</span>
+    <span class="panel-meta">live · 14 events today</span>
+  </div>
+
+  <div class="sect">happy path · article + embedding</div>
+
+  <div class="erow">
+    <span class="dot" style="color:var(--text-disabled)">○</span>
+    <span class="etype">ingestion_started</span>
+    <span class="edetail">The Orchestration Problem — Nate B. Jones</span>
+    <span class="etime">14:32:01</span>
+  </div>
+  <div class="erow">
+    <span class="dot" style="color:var(--success-600)">●</span>
+    <span class="etype" style="color:var(--success-700)">ingestion_succeeded</span>
+    <span class="edetail">a3f2c1d0… · complete</span>
+    <span class="etime">14:32:03</span>
+  </div>
+  <div class="erow">
+    <span class="dot" style="color:var(--text-disabled)">○</span>
+    <span class="etype">embedding_queued</span>
+    <span class="edetail">a3f2c1d0… · pending → processing</span>
+    <span class="etime">14:32:03</span>
+  </div>
+  <div class="erow">
+    <span class="dot" style="color:var(--success-600)">●</span>
+    <span class="etype" style="color:var(--success-700)">embedding_succeeded</span>
+    <span class="edetail">a3f2c1d0… · complete · text-embedding-3-small</span>
+    <span class="etime">14:32:07</span>
+  </div>
+
+  <div class="sect">embedding retry chain · 3 attempts · 2s → 8s → terminal</div>
+
+  <div class="erow">
+    <span class="dot" style="color:var(--success-600)">●</span>
+    <span class="etype" style="color:var(--success-700)">ingestion_succeeded</span>
+    <span class="edetail">b7e1d4f2… · partial · embedding_queued</span>
+    <span class="etime">14:33:10</span>
+  </div>
+
+  <div class="chain-block">
+    <!-- Attempt 1 -->
+    <div class="chain-trigger">
+      <span class="dot" style="color:var(--danger-600)">✕</span>
+      <span class="etype" style="color:var(--danger-700)">embedding_failed</span>
+      <span class="edetail" style="color:var(--danger-700)">RATE_LIMITED · retryable: true · attempt 1/3</span>
+      <span class="etime">14:33:12</span>
+    </div>
+    <div class="retry-of-line">event_id: <span style="color:var(--text-muted)">evt_a1b2c3…</span></div>
+
+    <div class="chain-wait">
+      <div class="wait-arrow">↓</div>
+      <div class="wait-label">wait 2s</div>
+      <div class="wait-line"></div>
+      <span style="font-size:8px;color:var(--text-disabled)">retry_of_event_id → evt_a1b2c3</span>
+    </div>
+
+    <div class="chain-retry">
+      <span class="dot" style="color:var(--warning-600)">↺</span>
+      <span class="etype" style="color:var(--warning-700)">retry_attempted</span>
+      <span class="edetail" style="color:var(--warning-700)">retry_of: evt_a1b2c3… · attempt 2/3</span>
+      <span class="etime">14:33:14</span>
+    </div>
+    <div class="chain-fail">
+      <span class="dot" style="color:var(--danger-600)">✕</span>
+      <span class="etype" style="color:var(--danger-700)">embedding_failed</span>
+      <span class="edetail" style="color:var(--danger-700)">RATE_LIMITED · retryable: true · attempt 2/3</span>
+      <span class="etime">14:33:14</span>
+    </div>
+    <div class="retry-of-line">event_id: <span style="color:var(--text-muted)">evt_d4e5f6…</span></div>
+
+    <div class="chain-wait">
+      <div class="wait-arrow">↓</div>
+      <div class="wait-label">wait 8s</div>
+      <div class="wait-line"></div>
+      <span style="font-size:8px;color:var(--text-disabled)">retry_of_event_id → evt_d4e5f6</span>
+    </div>
+
+    <div class="chain-retry">
+      <span class="dot" style="color:var(--warning-600)">↺</span>
+      <span class="etype" style="color:var(--warning-700)">retry_attempted</span>
+      <span class="edetail" style="color:var(--warning-700)">retry_of: evt_d4e5f6… · attempt 3/3</span>
+      <span class="etime">14:33:22</span>
+    </div>
+    <div class="chain-terminal">
+      <span class="dot" style="color:var(--danger-600)">✕</span>
+      <span class="etype" style="color:var(--danger-700)">embedding_failed</span>
+      <span class="edetail" style="display:flex;align-items:center;gap:6px">
+        <span style="color:var(--danger-700)">RATE_LIMITED · attempt 3/3</span>
+        <span class="terminal-badge">⚠ TERMINAL · manual triage</span>
+      </span>
+      <span class="etime">14:33:22</span>
+    </div>
+  </div>
+
+  <div class="sect">ingestion failure · non-retryable</div>
+  <div class="erow fail">
+    <span class="dot" style="color:var(--danger-600)">✕</span>
+    <span class="etype" style="color:var(--danger-700)">ingestion_failed</span>
+    <span class="edetail" style="color:var(--danger-700)">DUPLICATE_ARTICLE · retryable: false · no retry chain</span>
+    <span class="etime">14:34:01</span>
+  </div>
+
+  <div class="feed-footer">
+    <span class="foot-stat"><span style="color:var(--success-600)">●</span> 4 succeeded</span>
+    <span class="foot-stat"><span style="color:var(--danger-600)">✕</span> 4 failed</span>
+    <span class="foot-stat"><span style="color:var(--warning-600)">↺</span> 2 retries</span>
+  </div>
+</div>
+</body>
+</html>

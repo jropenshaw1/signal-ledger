@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../brand_tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); font-family: var(--font-sans); padding: 16px; }
+  .section-label { font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-600); margin: 12px 0 6px; }
+  .section-label:first-child { margin-top: 0; }
+  .sp-row { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+  .sp-name { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); width: 90px; flex-shrink: 0; }
+  .sp-val { font-family: var(--font-mono); font-size: 9px; color: var(--text-disabled); width: 32px; flex-shrink: 0; }
+  .sp-bar { height: 14px; background: var(--accent-100); border: 1px solid var(--accent-border); border-radius: 1px; }
+  .sp-desc { font-family: var(--font-mono); font-size: 9px; color: var(--text-disabled); }
+  .divider { height: 1px; background: var(--border-subtle); margin: 10px 0; }
+</style>
+</head>
+<body>
+  <div class="section-label">Spacing Scale (4px base unit)</div>
+  <div class="sp-row"><span class="sp-name">--space-0-5</span><span class="sp-val">2px</span><div style="width:180px"><div class="sp-bar" style="width:2px"></div></div><span class="sp-desc">hairline</span></div>
+  <div class="sp-row"><span class="sp-name">--space-1</span><span class="sp-val">4px</span><div style="width:180px"><div class="sp-bar" style="width:4px"></div></div><span class="sp-desc">micro</span></div>
+  <div class="sp-row"><span class="sp-name">--space-1-5</span><span class="sp-val">6px</span><div style="width:180px"><div class="sp-bar" style="width:6px"></div></div><span class="sp-desc">badge gap</span></div>
+  <div class="sp-row"><span class="sp-name">--space-2</span><span class="sp-val">8px</span><div style="width:180px"><div class="sp-bar" style="width:8px"></div></div><span class="sp-desc">padding-dense / compact row</span></div>
+  <div class="sp-row"><span class="sp-name">--space-3</span><span class="sp-val">12px</span><div style="width:180px"><div class="sp-bar" style="width:12px"></div></div><span class="sp-desc">padding-standard / panel gap</span></div>
+  <div class="sp-row"><span class="sp-name">--space-4</span><span class="sp-val">16px</span><div style="width:180px"><div class="sp-bar" style="width:16px"></div></div><span class="sp-desc">padding-relaxed / section gap</span></div>
+  <div class="sp-row"><span class="sp-name">--space-5</span><span class="sp-val">20px</span><div style="width:180px"><div class="sp-bar" style="width:20px"></div></div></div>
+  <div class="sp-row"><span class="sp-name">--space-6</span><span class="sp-val">24px</span><div style="width:180px"><div class="sp-bar" style="width:24px"></div></div></div>
+  <div class="sp-row"><span class="sp-name">--space-8</span><span class="sp-val">32px</span><div style="width:180px"><div class="sp-bar" style="width:32px"></div></div></div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Row Heights</div>
+  <div class="sp-row">
+    <span class="sp-name">compact row</span><span class="sp-val">28px</span>
+    <div style="width:160px; height:28px; background:var(--bg-surface); border:1px solid var(--border-default); display:flex; align-items:center; padding:0 8px">
+      <span style="font-family:var(--font-mono); font-size:9px; color:var(--text-muted)">event feed row</span>
+    </div>
+  </div>
+  <div class="sp-row">
+    <span class="sp-name">standard row</span><span class="sp-val">36px</span>
+    <div style="width:200px; height:36px; background:var(--bg-surface); border:1px solid var(--border-default); display:flex; align-items:center; padding:0 8px">
+      <span style="font-family:var(--font-mono); font-size:9px; color:var(--text-muted)">article / corpus row</span>
+    </div>
+  </div>
+  <div class="sp-row">
+    <span class="sp-name">provider bar</span><span class="sp-val">56px</span>
+    <div style="width:240px; height:56px; background:var(--bg-header); border:1px solid var(--border-default); display:flex; align-items:center; padding:0 10px">
+      <span style="font-family:var(--font-mono); font-size:9px; color:var(--text-secondary)">provider overview bar</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Border Radius</div>
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:48px;height:36px;background:var(--bg-elevated);border:1px solid var(--accent-600);border-radius:0"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-align:center">0px<br>panels</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:48px;height:36px;background:var(--bg-elevated);border:1px solid var(--accent-600);border-radius:2px"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-align:center">2px<br>badges</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:48px;height:36px;background:var(--bg-elevated);border:1px solid var(--accent-600);border-radius:4px"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-align:center">4px<br>buttons</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:48px;height:36px;background:var(--bg-elevated);border:1px solid var(--accent-600);border-radius:6px"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-align:center">6px<br>modals</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:48px;height:36px;background:var(--bg-elevated);border:1px solid var(--accent-600);border-radius:8px"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-align:center">8px<br>cards</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Borders</div>
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:28px;border:1px solid #e4d9cc;background:var(--bg-surface)"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-disabled)">subtle</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:28px;border:1px solid #c4a882;background:var(--bg-surface)"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-disabled)">default</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:28px;border:1px solid #b8956e;background:var(--bg-elevated)"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-disabled)">elevated</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:28px;border:2px solid #c2410c;background:var(--bg-active)"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-disabled)">focus/active</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:28px;border-left:2px solid #c2410c;border-top:1px solid #c4a882;border-right:1px solid #c4a882;border-bottom:1px solid #c4a882;background:var(--bg-active)"></div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-disabled)">selected row</div>
+    </div>
+  </div>
+</body>
+</html>

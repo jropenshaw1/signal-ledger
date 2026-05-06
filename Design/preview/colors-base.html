@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../brand_tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); font-family: var(--font-sans); padding: 16px; }
+  .group { margin-bottom: 14px; }
+  .group-label { font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-600); margin-bottom: 6px; }
+  .swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+  .swatch { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .swatch-block { width: 72px; height: 40px; border-radius: 2px; border: 1px solid var(--border-default); }
+  .swatch-var { font-family: var(--font-mono); font-size: 8px; color: var(--text-muted); }
+  .swatch-hex { font-family: var(--font-mono); font-size: 8px; color: var(--text-disabled); }
+  .divider { height: 1px; background: var(--border-subtle); margin: 10px 0; }
+</style>
+</head>
+<body>
+  <div class="group">
+    <div class="group-label">Backgrounds — depth hierarchy</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#f3ebe2"></div><div class="swatch-var">--bg-base</div><div class="swatch-hex">#f3ebe2</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#f8f2eb"></div><div class="swatch-var">--bg-surface</div><div class="swatch-hex">#f8f2eb</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#ffffff; border:1px solid #c4a882"></div><div class="swatch-var">--bg-elevated</div><div class="swatch-hex">#ffffff</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#e4d5c4"></div><div class="swatch-var">--bg-header</div><div class="swatch-hex">#e4d5c4</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#eee4d8"></div><div class="swatch-var">--bg-hover</div><div class="swatch-hex">#eee4d8</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#e8dccf"></div><div class="swatch-var">--bg-active</div><div class="swatch-hex">#e8dccf</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#f0e7dc"></div><div class="swatch-var">--bg-inset</div><div class="swatch-hex">#f0e7dc</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="group">
+    <div class="group-label">Borders</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#e4d9cc"></div><div class="swatch-var">--border-subtle</div><div class="swatch-hex">#e4d9cc</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#c4a882"></div><div class="swatch-var">--border-default</div><div class="swatch-hex">#c4a882</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#b8956e"></div><div class="swatch-var">--border-elevated</div><div class="swatch-hex">#b8956e</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#c2410c"></div><div class="swatch-var">--border-focus</div><div class="swatch-hex">#c2410c</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="group">
+    <div class="group-label">Primary Accent — Burnt Sienna</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#9a3412"></div><div class="swatch-var">--accent-700</div><div class="swatch-hex">#9a3412</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#c2410c"></div><div class="swatch-var">--accent-600 ●</div><div class="swatch-hex">#c2410c</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#d4540f"></div><div class="swatch-var">--accent-500</div><div class="swatch-hex">#d4540f</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#f0dcc6"></div><div class="swatch-var">--accent-100</div><div class="swatch-hex">#f0dcc6</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#d4a574"></div><div class="swatch-var">--accent-border</div><div class="swatch-hex">#d4a574</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="group">
+    <div class="group-label">Text — Warm Slate</div>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#1c1008; display:flex; align-items:center; justify-content:center">
+          <span style="font-family:'Inter',sans-serif; font-size:10px; color:#f3ebe2">Aa</span>
+        </div>
+        <div class="swatch-var">--text-primary</div><div class="swatch-hex">#1c1008</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#2c1a08; display:flex; align-items:center; justify-content:center">
+          <span style="font-family:'Inter',sans-serif; font-size:10px; color:#f3ebe2">Aa</span>
+        </div>
+        <div class="swatch-var">--text-heading</div><div class="swatch-hex">#2c1a08</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#4a3520; display:flex; align-items:center; justify-content:center">
+          <span style="font-family:'Inter',sans-serif; font-size:10px; color:#f3ebe2">Aa</span>
+        </div>
+        <div class="swatch-var">--text-secondary</div><div class="swatch-hex">#4a3520</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#6b4f34; display:flex; align-items:center; justify-content:center">
+          <span style="font-family:'Inter',sans-serif; font-size:10px; color:#f8f2eb">Aa</span>
+        </div>
+        <div class="swatch-var">--text-tertiary</div><div class="swatch-hex">#6b4f34</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#8b7260; display:flex; align-items:center; justify-content:center">
+          <span style="font-family:'Inter',sans-serif; font-size:10px; color:#f8f2eb">Aa</span>
+        </div>
+        <div class="swatch-var">--text-muted</div><div class="swatch-hex">#8b7260</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#a89888; display:flex; align-items:center; justify-content:center">
+          <span style="font-family:'Inter',sans-serif; font-size:10px; color:#f8f2eb">Aa</span>
+        </div>
+        <div class="swatch-var">--text-disabled</div><div class="swatch-hex">#a89888</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="group">
+    <div class="group-label">Shadows — Warm-tinted (rgba(44, 26, 8, …))</div>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#fff; box-shadow:none"></div>
+        <div class="swatch-var">--shadow-none</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#fff; box-shadow:0 1px 2px rgba(44,26,8,0.08)"></div>
+        <div class="swatch-var">--shadow-sm</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#fff; box-shadow:0 2px 4px rgba(44,26,8,0.1)"></div>
+        <div class="swatch-var">--shadow-md</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#fff; box-shadow:0 4px 12px rgba(44,26,8,0.12)"></div>
+        <div class="swatch-var">--shadow-lg</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

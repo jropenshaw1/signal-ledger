@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; font-family: 'Inter', sans-serif; padding: 14px; }
+
+  .group { margin-bottom: 14px; }
+  .group-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #3B82F6;
+    margin-bottom: 6px;
+  }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-start; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 8px 3px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    white-space: nowrap; border: 1px solid transparent;
+  }
+  .badge-sm {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 1px 6px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500;
+    white-space: nowrap; border: 1px solid transparent;
+  }
+
+  /* P9 annotation block */
+  .p9-block {
+    background: #0D1015; border: 1px solid #1E2530; border-radius: 2px;
+    padding: 8px 10px; margin-top: 6px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .p9-col-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .p9-desc {
+    font-family: 'Inter', sans-serif; font-size: 10px; line-height: 1.55;
+  }
+  .p9-rule {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; margin-top: 4px;
+    padding: 3px 6px; border-radius: 2px;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .proc-dot {
+    display: inline-block; width: 7px; height: 7px;
+    background: #60A5FA; border-radius: 50%;
+    animation: pulse 1.4s ease-in-out infinite; flex-shrink: 0;
+  }
+  .divider { height: 1px; background: #1A1F26; margin: 12px 0; }
+</style>
+</head>
+<body>
+
+  <!-- ── CAPTURE COMPLETENESS ─────────────────────────────────────── -->
+  <div class="group">
+    <div class="group-label">Capture Completeness — Charter P9 Source-vs-System Distinction</div>
+    <div class="row">
+      <span class="badge" style="background:#0F2318; color:#4ADE80; border-color:#1A3D26">
+        <span style="font-size:9px">●</span> complete
+      </span>
+      <!-- preview-only: VIOLET — distinct color family = source-not-provided -->
+      <span class="badge" style="background:#1A0E3D; color:#C4B5FD; border-color:#341870">
+        <span style="font-size:9px">◐</span> preview-only
+      </span>
+      <!-- partial: AMBER — distinct color family = system-failed -->
+      <span class="badge" style="background:#2A1A04; color:#FBBF24; border-color:#3D2706">
+        <span style="font-size:9px">◑</span> partial
+      </span>
+    </div>
+
+    <!-- P9 split explanation -->
+    <div class="p9-block">
+      <div>
+        <div class="p9-col-label" style="color:#A78BFA">◐ preview-only — source-not-provided</div>
+        <div class="p9-desc" style="color:#94A3B8">Source gated content at tier boundary (paywall). System captured what was available. <strong style="color:#C4B5FD">Not a failure.</strong> No retry warranted.</div>
+        <div class="p9-rule" style="background:#1A0E3D; color:#C4B5FD; border:1px solid #341870">retryable: false · access upgrade required</div>
+      </div>
+      <div>
+        <div class="p9-col-label" style="color:#FBBF24">◑ partial — system-failed</div>
+        <div class="p9-desc" style="color:#94A3B8">System captured less than the full artifact. Extraction failure, truncation, or pipeline error. <strong style="color:#FBBF24">Retry warranted.</strong></div>
+        <div class="p9-rule" style="background:#2A1A04; color:#FBBF24; border:1px solid #3D2706">retryable: true · failure_category required</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── EMBEDDING STATUS ─────────────────────────────────────────── -->
+  <div class="group">
+    <div class="group-label">Embedding Status — Async Pipeline (separate from capture completeness)</div>
+    <div class="row">
+      <span class="badge" style="background:#141820; color:#64748B; border-color:#1E2530">
+        <span style="font-size:9px; color:#475569">○</span> pending
+      </span>
+      <span class="badge" style="background:#0D1E3A; color:#93C5FD; border-color:#1A3560">
+        <span class="proc-dot"></span> processing
+      </span>
+      <span class="badge" style="background:#0F2318; color:#4ADE80; border-color:#1A3D26">
+        <span style="font-size:9px">●</span> complete
+      </span>
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5; border-color:#3D1A1A">
+        <span style="font-size:9px">✕</span> failed
+      </span>
+      <span class="badge" style="background:#111418; color:#334155; border-color:#1E2530">
+        — n/a <span style="font-size:9px; color:#2D3748">(preview-only rows: no body_text)</span>
+      </span>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:#334155; margin-top:5px; line-height:1.6">
+      State machine: pending → processing → complete | failed &nbsp;·&nbsp;
+      3 attempts: wait 2s → wait 8s → terminal &nbsp;·&nbsp;
+      preview-only rows carry NULL throughout
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── EVENT TYPES ──────────────────────────────────────────────── -->
+  <div class="group">
+    <div class="group-label">Ingestion Event Types (7 pipeline-stage types)</div>
+    <div class="row">
+      <span class="badge-sm" style="background:#111418; color:#64748B; border-color:#1E2530">ingestion_started</span>
+      <span class="badge-sm" style="background:#0F2318; color:#4ADE80; border-color:#1A3D26">ingestion_succeeded</span>
+      <span class="badge-sm" style="background:#2C0F0F; color:#FCA5A5; border-color:#3D1A1A">ingestion_failed</span>
+      <span class="badge-sm" style="background:#141820; color:#64748B; border-color:#1E2530">embedding_queued</span>
+      <span class="badge-sm" style="background:#0F2318; color:#4ADE80; border-color:#1A3D26">embedding_succeeded</span>
+      <span class="badge-sm" style="background:#2C0F0F; color:#FCA5A5; border-color:#3D1A1A">embedding_failed</span>
+      <span class="badge-sm" style="background:#2A1A04; color:#FBBF24; border-color:#3D2706">retry_attempted</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── LOWER GRID ───────────────────────────────────────────────── -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div>
+      <div class="group-label">Content Type</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:#0D1520; color:#60A5FA; border-color:#1E3A5F">Nate-feature-article</span>
+        <span class="badge-sm" style="background:#160D30; color:#A78BFA; border-color:#2D1B69">Nate-executive-briefing</span>
+      </div>
+    </div>
+    <div>
+      <div class="group-label">Gap Window</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:#2A1A04; color:#FBBF24; border-color:#3D2706">▲ open</span>
+        <span class="badge-sm" style="background:#0D1E3A; color:#93C5FD; border-color:#1A3560">◎ acknowledged</span>
+        <span class="badge-sm" style="background:#0F2318; color:#4ADE80; border-color:#1A3D26">✓ resolved</span>
+        <span class="badge-sm" style="background:#141820; color:#475569; border-color:#1E2530">— unresolvable</span>
+      </div>
+    </div>
+    <div>
+      <div class="group-label">Tier Disposition</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:#111418; color:#94A3B8; border-color:#2D3748">maintain-current-tier</span>
+        <span class="badge-sm" style="background:#0F2318; color:#4ADE80; border-color:#1A3D26">upgrade-candidate</span>
+        <span class="badge-sm" style="background:#2A1A04; color:#FBBF24; border-color:#3D2706">degradation-signal</span>
+        <span class="badge-sm" style="background:#2C0F0F; color:#FCA5A5; border-color:#3D1A1A">abandon-signal</span>
+      </div>
+    </div>
+    <div>
+      <div class="group-label">Kit Lifecycle</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:#141820; color:#64748B; border-color:#1E2530">unevaluated</span>
+        <span class="badge-sm" style="background:#0F2318; color:#4ADE80; border-color:#1A3D26">repeat-scheduled</span>
+        <span class="badge-sm" style="background:#0D1E3A; color:#93C5FD; border-color:#1A3560">conditionally-deferred</span>
+        <span class="badge-sm" style="background:#141820; color:#475569; border-color:#1E2530">one-time</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

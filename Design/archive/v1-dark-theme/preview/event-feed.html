@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; font-family: 'JetBrains Mono', monospace; }
+
+  .feed-panel { background: #111418; border: 1px solid #1E2530; }
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; border-bottom: 1px solid #1E2530; background: #181D22;
+  }
+  .panel-title { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #E2E8F0; }
+  .panel-meta { font-size: 9px; color: #475569; }
+
+  /* Standard flat row */
+  .erow {
+    display: grid; grid-template-columns: 14px 140px 1fr 58px;
+    align-items: center; gap: 8px;
+    padding: 5px 12px; border-bottom: 1px solid #151A20;
+    min-height: 28px;
+  }
+  .erow.ok   { }
+  .erow.fail { background: rgba(44,15,15,0.28); }
+  .dot  { font-size: 9px; text-align: center; line-height: 1; }
+  .etype { font-size: 9px; font-weight: 500; color: #64748B; letter-spacing: 0.03em; white-space: nowrap; }
+  .edetail { font-size: 10px; color: #94A3B8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .etime { font-size: 9px; color: #334155; text-align: right; }
+
+  /* Section divider */
+  .sect {
+    padding: 4px 12px; font-size: 8px; font-weight: 600; color: #2D3748;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border-bottom: 1px solid #151A20; background: #0C0F12;
+  }
+
+  /* ── Retry chain block ─────────────────────────────────────────── */
+  .chain-block {
+    border-left: 2px solid #1E2530; margin: 0 0 0 12px;
+    background: #0D1015; border-bottom: 1px solid #1E2530;
+  }
+  /* Trigger event row (attempt 1 fail) */
+  .chain-trigger {
+    display: grid; grid-template-columns: 14px 140px 1fr 58px;
+    align-items: center; gap: 8px; padding: 5px 12px;
+    background: rgba(44,15,15,0.35); border-bottom: 1px solid #1A0C0C;
+    min-height: 28px;
+  }
+  /* Wait gap row */
+  .chain-wait {
+    display: flex; align-items: center; gap: 10px;
+    padding: 4px 12px 4px 36px; border-bottom: 1px dashed #1A1F25;
+  }
+  .wait-line { flex: 1; height: 1px; background: repeating-linear-gradient(90deg, #1E2530 0, #1E2530 4px, transparent 4px, transparent 8px); }
+  .wait-label {
+    font-size: 9px; font-weight: 600; color: #F59E0B;
+    padding: 1px 6px; background: #2A1A04; border: 1px solid #3D2706; border-radius: 2px;
+    white-space: nowrap;
+  }
+  .wait-arrow { font-size: 9px; color: #3D2706; }
+  /* Retry row */
+  .chain-retry {
+    display: grid; grid-template-columns: 14px 140px 1fr 58px;
+    align-items: center; gap: 8px; padding: 5px 12px;
+    background: rgba(44,31,6,0.22); border-bottom: 1px solid #1A1205;
+    min-height: 28px;
+  }
+  /* Retry attempt fail row */
+  .chain-fail {
+    display: grid; grid-template-columns: 14px 140px 1fr 58px;
+    align-items: center; gap: 8px; padding: 5px 12px;
+    background: rgba(44,15,15,0.28); border-bottom: 1px solid #1A0C0C;
+    min-height: 28px;
+  }
+  /* Terminal row */
+  .chain-terminal {
+    display: grid; grid-template-columns: 14px 140px 1fr 58px;
+    align-items: center; gap: 8px; padding: 6px 12px;
+    background: rgba(60,8,8,0.55); border-top: 1px solid #3D1A1A;
+    min-height: 30px;
+  }
+  .terminal-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 1px 6px; background: #3D1A1A; border: 1px solid #6B2121;
+    border-radius: 2px; font-size: 9px; font-weight: 600; color: #FCA5A5;
+    white-space: nowrap;
+  }
+  /* retry_of linkage annotation */
+  .retry-of-line {
+    padding: 2px 12px 2px 50px; font-size: 8px; color: #2D3748;
+    border-bottom: 1px dotted #151A20;
+  }
+  .retry-of-link { color: #3B82F6; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .proc-dot { display:inline-block; width:6px; height:6px; background:#60A5FA; border-radius:50%; animation:pulse 1.4s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div class="feed-panel">
+  <div class="panel-header">
+    <span class="panel-title">Ingestion Monitor</span>
+    <span class="panel-meta">live · 14 events today</span>
+  </div>
+
+  <!-- ── Happy path ────────────────────────────────────────────────── -->
+  <div class="sect">happy path · article + embedding</div>
+
+  <div class="erow ok">
+    <span class="dot" style="color:#475569">○</span>
+    <span class="etype">ingestion_started</span>
+    <span class="edetail">The Orchestration Problem — Nate B. Jones</span>
+    <span class="etime">14:32:01</span>
+  </div>
+  <div class="erow ok">
+    <span class="dot" style="color:#22C55E">●</span>
+    <span class="etype" style="color:#4ADE80">ingestion_succeeded</span>
+    <span class="edetail">a3f2c1d0… · complete</span>
+    <span class="etime">14:32:03</span>
+  </div>
+  <div class="erow ok">
+    <span class="dot" style="color:#475569">○</span>
+    <span class="etype">embedding_queued</span>
+    <span class="edetail">a3f2c1d0… · pending → processing</span>
+    <span class="etime">14:32:03</span>
+  </div>
+  <div class="erow ok">
+    <span class="dot"><span class="proc-dot"></span></span>
+    <span class="etype" style="color:#93C5FD">embedding_queued</span>
+    <span class="edetail" style="color:#93C5FD">a3f2c1d0… · processing…</span>
+    <span class="etime">14:32:04</span>
+  </div>
+  <div class="erow ok">
+    <span class="dot" style="color:#22C55E">●</span>
+    <span class="etype" style="color:#4ADE80">embedding_succeeded</span>
+    <span class="edetail">a3f2c1d0… · complete · model: text-embedding-3-small</span>
+    <span class="etime">14:32:07</span>
+  </div>
+
+  <!-- ── Retry chain ───────────────────────────────────────────────── -->
+  <div class="sect">embedding retry chain · 3 attempts · 2s → 8s → terminal</div>
+
+  <div class="erow ok">
+    <span class="dot" style="color:#22C55E">●</span>
+    <span class="etype" style="color:#4ADE80">ingestion_succeeded</span>
+    <span class="edetail">b7e1d4f2… · partial · embedding_queued</span>
+    <span class="etime">14:33:10</span>
+  </div>
+
+  <!-- Chain block: all 3 attempts inside one visual unit -->
+  <div class="chain-block">
+
+    <!-- Attempt 1 -->
+    <div class="chain-trigger">
+      <span class="dot" style="color:#EF4444">✕</span>
+      <span class="etype" style="color:#F87171">embedding_failed</span>
+      <span class="edetail" style="color:#F87171">RATE_LIMITED · retryable: true · attempt 1/3</span>
+      <span class="etime">14:33:12</span>
+    </div>
+    <div class="retry-of-line">event_id: <span style="color:#475569">evt_a1b2c3…</span></div>
+
+    <!-- Wait 2s -->
+    <div class="chain-wait">
+      <div class="wait-arrow">↓</div>
+      <div class="wait-label">wait 2s</div>
+      <div class="wait-line"></div>
+      <span style="font-size:8px;color:#2D3748">retry_of_event_id → evt_a1b2c3</span>
+    </div>
+
+    <!-- Retry attempt row -->
+    <div class="chain-retry">
+      <span class="dot" style="color:#F59E0B">↺</span>
+      <span class="etype" style="color:#FBBF24">retry_attempted</span>
+      <span class="edetail" style="color:#FBBF24">retry_of: evt_a1b2c3… · attempt 2/3</span>
+      <span class="etime">14:33:14</span>
+    </div>
+
+    <!-- Attempt 2 fail -->
+    <div class="chain-fail">
+      <span class="dot" style="color:#EF4444">✕</span>
+      <span class="etype" style="color:#F87171">embedding_failed</span>
+      <span class="edetail" style="color:#F87171">RATE_LIMITED · retryable: true · attempt 2/3</span>
+      <span class="etime">14:33:14</span>
+    </div>
+    <div class="retry-of-line">event_id: <span style="color:#475569">evt_d4e5f6…</span></div>
+
+    <!-- Wait 8s -->
+    <div class="chain-wait">
+      <div class="wait-arrow">↓</div>
+      <div class="wait-label">wait 8s</div>
+      <div class="wait-line"></div>
+      <span style="font-size:8px;color:#2D3748">retry_of_event_id → evt_d4e5f6</span>
+    </div>
+
+    <!-- Retry 2 row -->
+    <div class="chain-retry">
+      <span class="dot" style="color:#F59E0B">↺</span>
+      <span class="etype" style="color:#FBBF24">retry_attempted</span>
+      <span class="edetail" style="color:#FBBF24">retry_of: evt_d4e5f6… · attempt 3/3</span>
+      <span class="etime">14:33:22</span>
+    </div>
+
+    <!-- Attempt 3: terminal -->
+    <div class="chain-terminal">
+      <span class="dot" style="color:#EF4444">✕</span>
+      <span class="etype" style="color:#F87171">embedding_failed</span>
+      <span class="edetail" style="display:flex;align-items:center;gap:6px">
+        <span style="color:#F87171">RATE_LIMITED · attempt 3/3</span>
+        <span class="terminal-badge">⚠ TERMINAL · manual triage required</span>
+      </span>
+      <span class="etime">14:33:22</span>
+    </div>
+
+  </div><!-- /chain-block -->
+
+  <!-- ── Non-retryable failure ─────────────────────────────────────── -->
+  <div class="sect">ingestion failure · non-retryable</div>
+  <div class="erow fail">
+    <span class="dot" style="color:#EF4444">✕</span>
+    <span class="etype" style="color:#F87171">ingestion_failed</span>
+    <span class="edetail" style="color:#F87171">DUPLICATE_ARTICLE · retryable: false · no retry chain</span>
+    <span class="etime">14:34:01</span>
+  </div>
+
+</div>
+</body>
+</html>

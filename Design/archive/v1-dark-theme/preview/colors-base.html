@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; font-family: 'Inter', sans-serif; padding: 16px; }
+  .group { margin-bottom: 14px; }
+  .group-label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+  .swatches { display: flex; gap: 3px; flex-wrap: wrap; }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .swatch-block { width: 48px; height: 32px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.06); }
+  .swatch-label { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #475569; white-space: nowrap; }
+  .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #334155; }
+</style>
+</head>
+<body>
+  <div class="group">
+    <div class="group-label">Backgrounds</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#0A0C0F; border-color:#1E2530"></div><div class="swatch-label">base</div><div class="swatch-hex">#0A0C0F</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#111418"></div><div class="swatch-label">surface</div><div class="swatch-hex">#111418</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#181D22"></div><div class="swatch-label">elevated</div><div class="swatch-hex">#181D22</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#1E252C"></div><div class="swatch-label">hover</div><div class="swatch-hex">#1E252C</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#0D1520"></div><div class="swatch-label">active</div><div class="swatch-hex">#0D1520</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#080A0C; border-color:#1E2530"></div><div class="swatch-label">inset</div><div class="swatch-hex">#080A0C</div></div>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Blue — Primary Accent</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#93C5FD"></div><div class="swatch-label">300</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#60A5FA"></div><div class="swatch-label">400</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#3B82F6"></div><div class="swatch-label">500 ●</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#2563EB"></div><div class="swatch-label">600</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#1D4ED8"></div><div class="swatch-label">700</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#1E3A5F"></div><div class="swatch-label">900 bg</div></div>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Green — Complete / Succeeded</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#86EFAC"></div><div class="swatch-label">300</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#4ADE80"></div><div class="swatch-label">400</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#22C55E"></div><div class="swatch-label">500 ●</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#16A34A"></div><div class="swatch-label">600</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#14291C"></div><div class="swatch-label">900 bg</div></div>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Amber — Partial / Retry (System-Failed)</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#FCD34D"></div><div class="swatch-label">300</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#FBBF24"></div><div class="swatch-label">400</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#F59E0B"></div><div class="swatch-label">500 ●</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#D97706"></div><div class="swatch-label">600</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#2C1F06"></div><div class="swatch-label">900 bg</div></div>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Red — Failed / Terminal Error</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#FCA5A5"></div><div class="swatch-label">300</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#F87171"></div><div class="swatch-label">400</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#EF4444"></div><div class="swatch-label">500 ●</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#DC2626"></div><div class="swatch-label">600</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#2C0F0F"></div><div class="swatch-label">900 bg</div></div>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Violet — Preview-Only (Source-Gated, Not System Failure)</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#C4B5FD"></div><div class="swatch-label">300</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#A78BFA"></div><div class="swatch-label">400</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#8B5CF6"></div><div class="swatch-label">500 ●</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#7C3AED"></div><div class="swatch-label">600</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#1E1040"></div><div class="swatch-label">900 bg</div></div>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Slate — Neutrals &amp; Text</div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-block" style="background:#E2E8F0"></div><div class="swatch-label">200 text-1</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#CBD5E1"></div><div class="swatch-label">300</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#94A3B8"></div><div class="swatch-label">400 text-2</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#64748B"></div><div class="swatch-label">500</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#475569"></div><div class="swatch-label">600 text-3</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#334155"></div><div class="swatch-label">700</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#1E293B"></div><div class="swatch-label">800</div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#0F172A"></div><div class="swatch-label">900</div></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; font-family: 'Inter', sans-serif; padding: 16px; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3B82F6; margin: 12px 0 6px; }
+  .section-label:first-child { margin-top: 0; }
+  .spacing-row { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+  .sp-bar-wrap { width: 180px; }
+  .sp-bar { height: 14px; background: #1E3A5F; border-radius: 1px; }
+  .sp-name { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #475569; width: 80px; flex-shrink: 0; }
+  .sp-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #64748B; width: 32px; flex-shrink: 0; }
+  .sp-desc { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #334155; }
+  .radius-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .radius-block { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .radius-sq { width: 40px; height: 32px; background: #1E2530; border: 1px solid #3B82F6; }
+  .radius-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #475569; text-align: center; }
+  .shadow-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .shadow-block { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .shadow-sq { width: 52px; height: 36px; background: #181D22; border: 1px solid #1E2530; }
+  .shadow-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #475569; text-align: center; }
+  .layout-row { display: flex; gap: 8px; align-items: flex-end; margin-top: 4px; }
+  .layout-block { background: #1E2530; border: 1px solid #2D3748; }
+  .layout-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #475569; margin-top: 4px; }
+</style>
+</head>
+<body>
+  <div class="section-label">Spacing Scale (4px base unit)</div>
+  <div class="spacing-row"><span class="sp-name">--space-0-5</span><span class="sp-val">2px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:2px"></div></div><span class="sp-desc">hairline gap</span></div>
+  <div class="spacing-row"><span class="sp-name">--space-1</span><span class="sp-val">4px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:4px"></div></div><span class="sp-desc">micro</span></div>
+  <div class="spacing-row"><span class="sp-name">--space-1-5</span><span class="sp-val">6px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:6px"></div></div><span class="sp-desc">badge gap</span></div>
+  <div class="spacing-row"><span class="sp-name">--space-2</span><span class="sp-val">8px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:8px"></div></div><span class="sp-desc">padding-dense / compact row padding</span></div>
+  <div class="spacing-row"><span class="sp-name">--space-3</span><span class="sp-val">12px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:12px"></div></div><span class="sp-desc">padding-standard / panel gap</span></div>
+  <div class="spacing-row"><span class="sp-name">--space-4</span><span class="sp-val">16px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:16px"></div></div><span class="sp-desc">padding-relaxed / section gap</span></div>
+  <div class="spacing-row"><span class="sp-name">--space-5</span><span class="sp-val">20px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:20px"></div></div><span class="sp-desc"></span></div>
+  <div class="spacing-row"><span class="sp-name">--space-6</span><span class="sp-val">24px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:24px"></div></div><span class="sp-desc"></span></div>
+  <div class="spacing-row"><span class="sp-name">--space-8</span><span class="sp-val">32px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:32px"></div></div><span class="sp-desc"></span></div>
+
+  <div class="section-label">Row Heights</div>
+  <div class="spacing-row"><span class="sp-name">row-height-compact</span><span class="sp-val">28px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:28px; background:#0D1520; border:1px solid #1E2530; height:28px; display:flex; align-items:center; padding:0 6px"><span style="font-family:monospace;font-size:9px;color:#475569">event feed row</span></div></div></div>
+  <div class="spacing-row"><span class="sp-name">row-height</span><span class="sp-val">36px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:160px; background:#111418; border:1px solid #1E2530; height:36px; display:flex; align-items:center; padding:0 6px"><span style="font-family:monospace;font-size:9px;color:#475569">standard article row</span></div></div></div>
+  <div class="spacing-row"><span class="sp-name">provider-bar-height</span><span class="sp-val">56px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:180px; background:#181D22; border:1px solid #2D3748; height:56px; display:flex; align-items:center; padding:0 8px"><span style="font-family:monospace;font-size:9px;color:#475569">provider overview bar</span></div></div></div>
+
+  <div class="section-label">Border Radius</div>
+  <div class="radius-row">
+    <div class="radius-block"><div class="radius-sq" style="border-radius:0px"></div><div class="radius-label">0px<br>panels</div></div>
+    <div class="radius-block"><div class="radius-sq" style="border-radius:2px"></div><div class="radius-label">2px<br>badges</div></div>
+    <div class="radius-block"><div class="radius-sq" style="border-radius:4px"></div><div class="radius-label">4px<br>buttons</div></div>
+    <div class="radius-block"><div class="radius-sq" style="border-radius:6px"></div><div class="radius-label">6px<br>dropdowns</div></div>
+  </div>
+
+  <div class="section-label">Shadows</div>
+  <div class="shadow-row">
+    <div class="shadow-block"><div class="shadow-sq" style="box-shadow:none"></div><div class="shadow-label">none<br>panels</div></div>
+    <div class="shadow-block"><div class="shadow-sq" style="box-shadow:0 1px 2px rgba(0,0,0,0.5)"></div><div class="shadow-label">sm<br>buttons</div></div>
+    <div class="shadow-block"><div class="shadow-sq" style="box-shadow:0 2px 4px rgba(0,0,0,0.4)"></div><div class="shadow-label">md<br>elevated</div></div>
+    <div class="shadow-block"><div class="shadow-sq" style="box-shadow:0 4px 12px rgba(0,0,0,0.5)"></div><div class="shadow-label">lg<br>modals</div></div>
+    <div class="shadow-block"><div class="shadow-sq" style="box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)"></div><div class="shadow-label">panel<br>inset top</div></div>
+  </div>
+
+  <div class="section-label">Borders</div>
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:24px;border:1px solid #151A20;background:#111418"></div>
+      <div style="font-family:monospace;font-size:9px;color:#475569">subtle</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:24px;border:1px solid #1E2530;background:#111418"></div>
+      <div style="font-family:monospace;font-size:9px;color:#475569">default</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:24px;border:1px solid #2D3748;background:#181D22"></div>
+      <div style="font-family:monospace;font-size:9px;color:#475569">elevated</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:24px;border:1px solid #3B82F6;background:#0D1520"></div>
+      <div style="font-family:monospace;font-size:9px;color:#475569">focus/active</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+      <div style="width:80px;height:24px;border-left:2px solid #3B82F6;border-top:1px solid #1E2530;border-right:1px solid #1E2530;border-bottom:1px solid #1E2530;background:#0D1520"></div>
+      <div style="font-family:monospace;font-size:9px;color:#475569">selected row</div>
+    </div>
+  </div>
+</body>
+</html>

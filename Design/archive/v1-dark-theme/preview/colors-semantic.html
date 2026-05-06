@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; font-family: 'Inter', sans-serif; padding: 16px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+  }
+  .dot { font-size: 10px; }
+  .section { margin-bottom: 16px; }
+  .tier-pill {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    border: 1px solid;
+  }
+  .gap-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+  }
+</style>
+</head>
+<body>
+  <div class="section">
+    <div class="label">Capture Completeness — Charter P9 Honesty</div>
+    <div class="row">
+      <span class="badge" style="background:#14291C; color:#86EFAC"><span class="dot">●</span> complete</span>
+      <span class="badge" style="background:#1E1040; color:#C4B5FD"><span class="dot">◐</span> preview-only</span>
+      <span class="badge" style="background:#2C1F06; color:#FCD34D"><span class="dot">◑</span> partial</span>
+    </div>
+    <div style="font-family:'Inter',sans-serif; font-size:10px; color:#475569; margin-top:4px; line-height:1.5">
+      <span style="color:#C4B5FD">preview-only</span> = source did not provide (paywall/tier-gated) &nbsp;·&nbsp;
+      <span style="color:#FCD34D">partial</span> = system failed to capture (retry warranted)
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Embedding Status Pipeline</div>
+    <div class="row">
+      <span class="badge" style="background:#161C23; color:#CBD5E1"><span class="dot">○</span> pending</span>
+      <span class="badge" style="background:#1E3A5F; color:#93C5FD"><span class="dot">◌</span> processing</span>
+      <span class="badge" style="background:#14291C; color:#86EFAC"><span class="dot">●</span> complete</span>
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5"><span class="dot">✕</span> failed</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Ingestion Event Types</div>
+    <div class="row">
+      <span class="badge" style="background:#111418; color:#64748B; border:1px solid #1E2530">ingestion_started</span>
+      <span class="badge" style="background:#14291C; color:#86EFAC; border:1px solid #1E3A28">ingestion_succeeded</span>
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5; border:1px solid #3A1A1A">ingestion_failed</span>
+      <span class="badge" style="background:#161C23; color:#94A3B8; border:1px solid #1E2530">embedding_queued</span>
+      <span class="badge" style="background:#14291C; color:#86EFAC; border:1px solid #1E3A28">embedding_succeeded</span>
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5; border:1px solid #3A1A1A">embedding_failed</span>
+      <span class="badge" style="background:#2C1F06; color:#FCD34D; border:1px solid #3A2A10">retry_attempted</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Gap Window Status</div>
+    <div class="row">
+      <span class="gap-pill" style="background:#2C1F06; color:#FCD34D"><span>▲</span> open</span>
+      <span class="gap-pill" style="background:#1E3A5F; color:#93C5FD"><span>◎</span> acknowledged</span>
+      <span class="gap-pill" style="background:#14291C; color:#86EFAC"><span>✓</span> resolved</span>
+      <span class="gap-pill" style="background:#1A1A20; color:#475569"><span>—</span> unresolvable</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Tier Disposition — Evaluative Sessions</div>
+    <div class="row">
+      <span class="tier-pill" style="color:#94A3B8; border-color:#334155">maintain-current-tier</span>
+      <span class="tier-pill" style="color:#86EFAC; border-color:#166534">upgrade-candidate</span>
+      <span class="tier-pill" style="color:#FCD34D; border-color:#713F12">degradation-signal</span>
+      <span class="tier-pill" style="color:#FCA5A5; border-color:#7F1D1D">abandon-signal</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Content Type Chips</div>
+    <div class="row">
+      <span class="badge" style="background:#0D1520; color:#60A5FA; border:1px solid #1E3A5F">Nate-feature-article</span>
+      <span class="badge" style="background:#0D1520; color:#A78BFA; border:1px solid #2D1B69">Nate-executive-briefing</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Error Codes</div>
+    <div class="row">
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5">DUPLICATE_ARTICLE</span>
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5">VALIDATION_ERROR</span>
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5">SCHEMA_VIOLATION</span>
+      <span class="badge" style="background:#2C1F06; color:#FCD34D">EMBEDDING_FAILURE</span>
+      <span class="badge" style="background:#2C1F06; color:#FCD34D">RATE_LIMITED</span>
+      <span class="badge" style="background:#2C1F06; color:#FCD34D">TRANSIENT_DB_ERROR</span>
+      <span class="badge" style="background:#2C0F0F; color:#FCA5A5">SYSTEM_ERROR</span>
+    </div>
+  </div>
+</body>
+</html>

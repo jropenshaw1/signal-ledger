@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; padding: 0; }
+  .corpus-panel { background: #111418; border: 1px solid #1E2530; }
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; border-bottom: 1px solid #1E2530; background: #181D22;
+  }
+  .panel-title { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #E2E8F0; }
+  .col-headers {
+    display: grid;
+    grid-template-columns: 1fr 90px 160px 80px 80px 52px;
+    padding: 4px 12px;
+    border-bottom: 1px solid #1E2530;
+    background: #0F1318;
+  }
+  .col-h { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500; color: #334155; text-transform: uppercase; letter-spacing: 0.07em; }
+  .article-row {
+    display: grid;
+    grid-template-columns: 1fr 90px 160px 80px 80px 52px;
+    align-items: center;
+    padding: 0 12px;
+    height: 36px;
+    border-bottom: 1px solid #151A20;
+    cursor: pointer;
+    transition: background 150ms ease;
+  }
+  .article-row:hover { background: #1E252C; }
+  .article-row.selected { background: #0D1520; border-left: 2px solid #3B82F6; padding-left: 10px; }
+  .article-title { font-family: 'Inter', sans-serif; font-size: 12px; color: #CBD5E1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+  .expand-icon { font-size: 9px; color: #334155; flex-shrink: 0; transition: transform 150ms; }
+  .article-row.open .expand-icon { transform: rotate(90deg); }
+  .date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #64748B; }
+  .content-type { font-family: 'JetBrains Mono', monospace; }
+  .badge-sm { display: inline-flex; align-items: center; gap: 3px; padding: 1px 5px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500; }
+  .emb-status { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #64748B; }
+  .kit-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #94A3B8; text-align: right; }
+
+  /* Expanded sub-panel */
+  .sub-panel {
+    background: #0D1118; border-top: 1px solid #151A20; border-bottom: 1px solid #1E2530;
+    padding: 10px 16px 12px 32px;
+  }
+  .sub-section { margin-bottom: 10px; }
+  .sub-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; color: #334155; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+  .signpost { font-family: 'Inter', sans-serif; font-size: 11px; color: #94A3B8; padding: 3px 0; border-left: 2px solid #1E3A5F; padding-left: 8px; margin-bottom: 3px; line-height: 1.4; }
+  .claim { font-family: 'Inter', sans-serif; font-size: 11px; color: #CBD5E1; padding: 3px 8px; background: #111820; border: 1px solid #1E2530; border-radius: 2px; margin-bottom: 3px; line-height: 1.4; }
+  .claim-meta { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #334155; margin-top: 2px; }
+  .block { font-family: 'Inter', sans-serif; font-size: 11px; color: #A78BFA; padding: 3px 8px; background: #160D30; border: 1px solid #2D1B69; border-radius: 2px; margin-bottom: 3px; line-height: 1.4; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.35} }
+  .proc-dot { display:inline-block;width:6px;height:6px;background:#60A5FA;border-radius:50%;animation:pulse 1.4s ease-in-out infinite; }
+</style>
+</head>
+<body>
+  <div class="corpus-panel">
+    <div class="panel-header">
+      <span class="panel-title">Corpus Explorer — 47 articles</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#334155">sort: published_date ↓</span>
+    </div>
+    <div class="col-headers">
+      <div class="col-h">Title</div>
+      <div class="col-h">Published</div>
+      <div class="col-h">Content Type</div>
+      <div class="col-h">Completeness</div>
+      <div class="col-h">Embedding</div>
+      <div class="col-h" style="text-align:right">Kits</div>
+    </div>
+
+    <!-- Standard complete row -->
+    <div class="article-row open selected">
+      <div class="article-title"><span class="expand-icon">▶</span>The Orchestration Problem: How Multi-Agent Systems Break</div>
+      <div class="date">2026-04-17</div>
+      <div><span class="badge-sm" style="background:#0D1520;color:#60A5FA;border:1px solid #1E3A5F">Nate-feature-article</span></div>
+      <div><span class="badge-sm" style="background:#14291C;color:#86EFAC"><span>●</span> complete</span></div>
+      <div class="emb-status" style="color:#86EFAC">● complete</div>
+      <div class="kit-count">3</div>
+    </div>
+    <!-- Expanded sub-panel -->
+    <div class="sub-panel">
+      <div class="sub-section">
+        <div class="sub-label">Author Signposts</div>
+        <div class="signpost">"The key insight here is that trust between agents is not symmetric…"</div>
+        <div class="signpost">"What I'm watching for in Q2: whether orchestration failures cluster around…"</div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Cited Claims (2)</div>
+        <div class="claim">Gartner projects 80% of enterprise AI deployments will include multi-agent coordination by 2027.
+          <div class="claim-meta">attributed_to: Gartner · claim_type: statistic · 2026-04-17</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Structured Technical Content (1)</div>
+        <div class="block">Trust Gradient Model — framework · block_type: framework · kit_candidate: true</div>
+      </div>
+    </div>
+
+    <!-- Preview-only row -->
+    <div class="article-row">
+      <div class="article-title"><span class="expand-icon">▶</span>Executive Brief: AI Infrastructure Spend — Week of Apr 14</div>
+      <div class="date">2026-04-14</div>
+      <div><span class="badge-sm" style="background:#160D30;color:#A78BFA;border:1px solid #2D1B69">Nate-executive-briefing</span></div>
+      <div><span class="badge-sm" style="background:#1E1040;color:#C4B5FD"><span>◐</span> preview-only</span></div>
+      <div class="emb-status" style="color:#475569">— n/a</div>
+      <div class="kit-count" style="color:#334155">0</div>
+    </div>
+
+    <!-- Partial row -->
+    <div class="article-row">
+      <div class="article-title"><span class="expand-icon">▶</span>The Credential Economy and What Agents Actually Trade</div>
+      <div class="date">2026-03-28</div>
+      <div><span class="badge-sm" style="background:#0D1520;color:#60A5FA;border:1px solid #1E3A5F">Nate-feature-article</span></div>
+      <div><span class="badge-sm" style="background:#2C1F06;color:#FCD34D"><span>◑</span> partial</span></div>
+      <div class="emb-status" style="color:#FBBF24">◌ pending</div>
+      <div class="kit-count">1</div>
+    </div>
+
+    <!-- Processing row -->
+    <div class="article-row">
+      <div class="article-title"><span class="expand-icon">▶</span>Prompt Engineering Is Dead. Long Live Prompt Architecture.</div>
+      <div class="date">2026-03-14</div>
+      <div><span class="badge-sm" style="background:#0D1520;color:#60A5FA;border:1px solid #1E3A5F">Nate-feature-article</span></div>
+      <div><span class="badge-sm" style="background:#14291C;color:#86EFAC"><span>●</span> complete</span></div>
+      <div class="emb-status" style="color:#93C5FD;display:flex;align-items:center;gap:4px"><span class="proc-dot"></span> proc.</div>
+      <div class="kit-count">2</div>
+    </div>
+  </div>
+</body>
+</html>

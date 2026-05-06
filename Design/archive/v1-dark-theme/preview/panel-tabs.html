@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; padding: 16px; font-family: 'Inter', sans-serif; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #3B82F6; margin: 0 0 8px; }
+  .tab-bar {
+    display: flex; gap: 0;
+    border-bottom: 1px solid #1E2530;
+    background: #111418;
+  }
+  .tab {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 400;
+    color: #475569;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 150ms, border-color 150ms, background 150ms;
+    white-space: nowrap;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: #94A3B8; background: #1E252C; }
+  .tab.active { color: #E2E8F0; border-bottom-color: #3B82F6; }
+  .tab i { flex-shrink: 0; }
+  .count-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 16px; height: 14px;
+    padding: 0 4px;
+    background: #1E2530; border-radius: 2px;
+    font-size: 9px; font-weight: 500; color: #64748B;
+  }
+  .count-badge.active { background: #1E3A5F; color: #93C5FD; }
+
+  /* Sample content area */
+  .tab-content {
+    background: #111418; border: 1px solid #1E2530; border-top: none;
+    padding: 12px; min-height: 60px;
+  }
+  .content-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #334155; }
+
+  .spacer { height: 20px; }
+  
+  /* Compact variant */
+  .tab-bar-compact .tab { padding: 5px 10px; font-size: 10px; }
+</style>
+</head>
+<body>
+  <div class="section-label">Retrieval &amp; Lifecycle — Tab Bar</div>
+  <div class="tab-bar">
+    <div class="tab active">
+      <i data-lucide="search" style="width:12px;height:12px"></i>
+      Targeted
+    </div>
+    <div class="tab">
+      <i data-lucide="cpu" style="width:12px;height:12px"></i>
+      Inferential
+    </div>
+    <div class="tab">
+      <i data-lucide="layers" style="width:12px;height:12px"></i>
+      Framing
+    </div>
+    <div class="tab">
+      <i data-lucide="bar-chart-2" style="width:12px;height:12px"></i>
+      Audit
+    </div>
+    <div class="tab">
+      <i data-lucide="star" style="width:12px;height:12px"></i>
+      Evaluative
+    </div>
+    <div class="tab">
+      <i data-lucide="package" style="width:12px;height:12px"></i>
+      Kit Status
+      <span class="count-badge">7</span>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div class="content-label">Active: Targeted — precision lookup by article, claim, signpost, or structured_block</div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="section-label">Compact Variant (panel sub-navigation)</div>
+  <div class="tab-bar tab-bar-compact">
+    <div class="tab">coverage</div>
+    <div class="tab active">completeness</div>
+    <div class="tab">gaps</div>
+    <div class="tab">ingestion-health <span class="count-badge active">3</span></div>
+  </div>
+  <div class="tab-content" style="padding:8px">
+    <div class="content-label">Audit sub-scope: completeness distribution</div>
+  </div>
+</body>
+<script>lucide.createIcons();</script>
+</html>

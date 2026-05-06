@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../brand_tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); font-family: var(--font-sans); padding: 16px; }
+  .row { display: flex; align-items: baseline; gap: 14px; padding: 7px 0; border-bottom: 1px solid var(--border-subtle); }
+  .meta { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); width: 100px; flex-shrink: 0; line-height: 1.4; }
+  .role { font-family: var(--font-mono); font-size: 9px; color: var(--text-disabled); width: 130px; flex-shrink: 0; }
+  .section-label { font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-600); margin: 12px 0 4px; }
+  .section-label:first-child { margin-top: 0; }
+  .synthesis-example { padding: 10px 12px; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 2px; margin-top: 6px; }
+</style>
+</head>
+<body>
+  <div class="section-label">Inter — UI text, labels, prose</div>
+
+  <div class="row">
+    <div class="meta">--text-2xl · 24px<br>semibold 600</div>
+    <div class="role">h1 / hero metric</div>
+    <div style="font-family:var(--font-sans); font-size:24px; font-weight:600; color:var(--text-heading); line-height:var(--lh-tight)">Provider Overview</div>
+  </div>
+  <div class="row">
+    <div class="meta">--text-xl · 20px<br>semibold 600</div>
+    <div class="role">h2 / section title</div>
+    <div style="font-family:var(--font-sans); font-size:20px; font-weight:600; color:var(--text-heading); line-height:var(--lh-tight)">Corpus Explorer</div>
+  </div>
+  <div class="row">
+    <div class="meta">--text-lg · 18px<br>medium 500</div>
+    <div class="role">h3 / panel title</div>
+    <div style="font-family:var(--font-sans); font-size:18px; font-weight:500; color:var(--text-heading); line-height:var(--lh-tight)">Ingestion Monitor</div>
+  </div>
+  <div class="row">
+    <div class="meta">--text-md · 15px<br>medium 500</div>
+    <div class="role">h4 / sub-header</div>
+    <div style="font-family:var(--font-sans); font-size:15px; font-weight:500; color:var(--text-primary); line-height:var(--lh-tight)">Retrieval &amp; Lifecycle</div>
+  </div>
+  <div class="row">
+    <div class="meta">--text-base · 14px<br>regular 400</div>
+    <div class="role">body / standard UI</div>
+    <div style="font-family:var(--font-sans); font-size:14px; font-weight:400; color:var(--text-primary); line-height:var(--lh-normal)">Article title or UI label copy at standard density</div>
+  </div>
+  <div class="row">
+    <div class="meta">--text-sm · 13px<br>regular 400</div>
+    <div class="role">p / article rows</div>
+    <div style="font-family:var(--font-sans); font-size:13px; font-weight:400; color:var(--text-secondary); line-height:var(--lh-relaxed)">The delta between a February and April perspective is itself a unit of insight.</div>
+  </div>
+  <div class="row">
+    <div class="meta">--text-xs · 11px<br>semibold 600 · caps</div>
+    <div class="role">column labels</div>
+    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-tertiary)">Published Date</div>
+  </div>
+  <div class="row">
+    <div class="meta">--text-2xs · 10px<br>semibold 700 · caps</div>
+    <div class="role">micro labels</div>
+    <div style="font-family:var(--font-sans); font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted)">Ingestion Source</div>
+  </div>
+
+  <div class="section-label" style="margin-top:14px">Synthesis Prose — Inferential / Framing results</div>
+  <div class="synthesis-example">
+    <p style="font-family:var(--font-sans); font-size:13px; line-height:var(--lh-relaxed); color:var(--text-primary)">
+      Nate's position on multi-agent coordination shifted materially between February and April 2026.
+      Early captures frame orchestration as a sequential hand-off problem; later captures treat it as
+      a concurrent trust-negotiation problem — a meaningful trajectory delta.
+    </p>
+    <div style="margin-top:8px; font-family:var(--font-mono); font-size:9px; color:var(--text-muted)">
+      Sources: 3 articles · 2026-02-14 → 2026-04-17
+    </div>
+  </div>
+</body>
+</html>

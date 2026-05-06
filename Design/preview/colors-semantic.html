@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../brand_tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); font-family: var(--font-sans); padding: 16px; }
+  .section-label { font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-600); margin: 12px 0 6px; }
+  .section-label:first-child { margin-top: 0; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 2px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; white-space: nowrap; border: 1px solid transparent; }
+  .badge-sm { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; border-radius: 2px; font-family: var(--font-mono); font-size: 9px; font-weight: 700; white-space: nowrap; border: 1px solid transparent; }
+  .p9-block { background: var(--bg-inset); border: 1px solid var(--border-default); border-radius: 2px; padding: 8px 10px; margin-top: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .p9-col-label { font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+  .p9-desc { font-family: var(--font-sans); font-size: 10px; line-height: 1.55; color: var(--text-secondary); }
+  .p9-rule { font-family: var(--font-mono); font-size: 9px; margin-top: 4px; padding: 2px 6px; border-radius: 2px; }
+  .divider { height: 1px; background: var(--border-subtle); margin: 10px 0; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .proc-dot { display:inline-block; width:7px; height:7px; background:var(--accent-500); border-radius:50%; animation:pulse 1.4s ease-in-out infinite; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+  <div class="section-label">Capture Completeness — Charter P9 Source-vs-System Distinction</div>
+  <div class="row">
+    <span class="badge" style="background:var(--success-100); color:var(--success-900); border-color:var(--success-500)">
+      <span>●</span> complete
+    </span>
+    <span class="badge" style="background:var(--info-100); color:var(--info-900); border-color:var(--info-600)">
+      <span>◐</span> preview-only
+    </span>
+    <span class="badge" style="background:var(--warning-100); color:var(--warning-900); border-color:var(--warning-600)">
+      <span>◑</span> partial
+    </span>
+  </div>
+  <div class="p9-block">
+    <div>
+      <div class="p9-col-label" style="color:var(--info-700)">◐ preview-only — source-not-provided</div>
+      <div class="p9-desc">Source gated content (paywall/tier). System captured what was available. <strong style="color:var(--info-700)">Not a failure.</strong></div>
+      <div class="p9-rule" style="background:var(--info-100); color:var(--info-900); border:1px solid var(--info-600)">retryable: false · access upgrade required</div>
+    </div>
+    <div>
+      <div class="p9-col-label" style="color:var(--warning-700)">◑ partial — system-failed</div>
+      <div class="p9-desc">System captured less than the full artifact. Pipeline or extraction failure. <strong style="color:var(--warning-700)">Retry warranted.</strong></div>
+      <div class="p9-rule" style="background:var(--warning-100); color:var(--warning-900); border:1px solid var(--warning-600)">retryable: true · failure_category required</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Embedding Status Pipeline</div>
+  <div class="row">
+    <span class="badge" style="background:var(--bg-inset); color:var(--text-muted); border-color:var(--border-default)"><span style="color:var(--text-disabled)">○</span> pending</span>
+    <span class="badge" style="background:var(--accent-100); color:var(--accent-700); border-color:var(--accent-border)"><span class="proc-dot"></span> processing</span>
+    <span class="badge" style="background:var(--success-100); color:var(--success-900); border-color:var(--success-500)"><span>●</span> complete</span>
+    <span class="badge" style="background:var(--danger-100); color:var(--danger-900); border-color:var(--danger-600)"><span>✕</span> failed</span>
+    <span class="badge" style="background:var(--bg-inset); color:var(--text-disabled); border-color:var(--border-subtle)">— n/a (preview-only)</span>
+  </div>
+  <div style="font-family:var(--font-mono); font-size:9px; color:var(--text-muted); margin-top:4px; line-height:1.6">
+    pending → processing → complete | failed · 3 attempts: wait 2s → wait 8s → terminal
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">Ingestion Event Types (7 pipeline-stage types)</div>
+  <div class="row">
+    <span class="badge-sm" style="background:var(--bg-inset); color:var(--text-muted); border-color:var(--border-default)">ingestion_started</span>
+    <span class="badge-sm" style="background:var(--success-100); color:var(--success-900); border-color:var(--success-500)">ingestion_succeeded</span>
+    <span class="badge-sm" style="background:var(--danger-100); color:var(--danger-900); border-color:var(--danger-600)">ingestion_failed</span>
+    <span class="badge-sm" style="background:var(--bg-inset); color:var(--text-muted); border-color:var(--border-default)">embedding_queued</span>
+    <span class="badge-sm" style="background:var(--success-100); color:var(--success-900); border-color:var(--success-500)">embedding_succeeded</span>
+    <span class="badge-sm" style="background:var(--danger-100); color:var(--danger-900); border-color:var(--danger-600)">embedding_failed</span>
+    <span class="badge-sm" style="background:var(--warning-100); color:var(--warning-900); border-color:var(--warning-600)">retry_attempted</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div>
+      <div class="section-label" style="margin-top:0">Content Type</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:var(--accent-100); color:var(--accent-700); border-color:var(--accent-border)">Nate-feature-article</span>
+        <span class="badge-sm" style="background:var(--info-100); color:var(--info-700); border-color:var(--info-600)">Nate-executive-briefing</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" style="margin-top:0">Gap Window</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:var(--warning-100); color:var(--warning-900); border-color:var(--warning-600)">▲ open</span>
+        <span class="badge-sm" style="background:var(--accent-100); color:var(--accent-700); border-color:var(--accent-border)">◎ acknowledged</span>
+        <span class="badge-sm" style="background:var(--success-100); color:var(--success-900); border-color:var(--success-500)">✓ resolved</span>
+        <span class="badge-sm" style="background:var(--bg-inset); color:var(--text-muted); border-color:var(--border-default)">— unresolvable</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" style="margin-top:0">Tier Disposition</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:var(--bg-inset); color:var(--text-secondary); border-color:var(--border-default)">maintain-current-tier</span>
+        <span class="badge-sm" style="background:var(--success-100); color:var(--success-900); border-color:var(--success-500)">upgrade-candidate</span>
+        <span class="badge-sm" style="background:var(--warning-100); color:var(--warning-900); border-color:var(--warning-600)">degradation-signal</span>
+        <span class="badge-sm" style="background:var(--danger-100); color:var(--danger-900); border-color:var(--danger-600)">abandon-signal</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label" style="margin-top:0">Kit Lifecycle</div>
+      <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+        <span class="badge-sm" style="background:var(--bg-inset); color:var(--text-muted); border-color:var(--border-default)">unevaluated</span>
+        <span class="badge-sm" style="background:var(--success-100); color:var(--success-900); border-color:var(--success-500)">repeat-scheduled</span>
+        <span class="badge-sm" style="background:var(--accent-100); color:var(--accent-700); border-color:var(--accent-border)">conditionally-deferred</span>
+        <span class="badge-sm" style="background:var(--bg-inset); color:var(--text-muted); border-color:var(--border-default)">one-time</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

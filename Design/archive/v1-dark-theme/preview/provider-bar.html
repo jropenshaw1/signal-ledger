@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0A0C0F; padding: 0; }
+  .provider-bar {
+    display: flex; align-items: center; gap: 0;
+    height: 56px;
+    background: #181D22;
+    border-bottom: 1px solid #2D3748;
+    padding: 0 16px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+  .provider-identity {
+    display: flex; align-items: center; gap: 10px;
+    padding-right: 20px;
+    border-right: 1px solid #1E2530;
+    margin-right: 20px;
+    flex-shrink: 0;
+  }
+  .provider-icon {
+    width: 32px; height: 32px; border-radius: 4px;
+    background: #0D1520; border: 1px solid #1E3A5F;
+    display: flex; align-items: center; justify-content: center;
+    color: #60A5FA; flex-shrink: 0;
+  }
+  .provider-name { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: #E2E8F0; }
+  .provider-platform { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #475569; margin-top: 1px; }
+  .meta-grid {
+    display: flex; align-items: center; gap: 0; flex: 1;
+  }
+  .meta-item {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 0 16px;
+    border-right: 1px solid #1E2530;
+  }
+  .meta-item:last-child { border-right: none; }
+  .meta-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #334155; text-transform: uppercase; letter-spacing: 0.08em; }
+  .meta-value { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: #CBD5E1; }
+  .meta-value.large { font-size: 16px; font-weight: 600; color: #E2E8F0; }
+  .tier-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+  }
+  .gap-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    cursor: pointer; transition: opacity 150ms;
+  }
+  .gap-badge:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+  <div class="provider-bar">
+    <div class="provider-identity">
+      <div class="provider-icon">
+        <i data-lucide="building-2" style="width:16px;height:16px"></i>
+      </div>
+      <div>
+        <div class="provider-name">Nate B. Jones</div>
+        <div class="provider-platform">Substack · natesnewsletter.substack.com</div>
+      </div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-label">Tier</div>
+        <div class="meta-value">
+          <span class="tier-badge" style="background:#14291C; color:#86EFAC; border:1px solid #163320">
+            ● paid
+          </span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Corpus Start</div>
+        <div class="meta-value">2026-02-12</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Articles</div>
+        <div class="meta-value large">47</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Last Ingestion</div>
+        <div class="meta-value">2026-05-02</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Gap Window</div>
+        <div class="meta-value">
+          <span class="gap-badge" style="background:#1E3A5F; color:#93C5FD; border:1px solid #1E4A7A">
+            <i data-lucide="alert-triangle" style="width:10px;height:10px"></i>
+            Feb 12–21 · acknowledged
+          </span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Evaluation</div>
+        <div class="meta-value">
+          <span class="tier-badge" style="background:#111418; color:#94A3B8; border:1px solid #2D3748">
+            maintain-current-tier
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second variant: gap = open -->
+  <div class="provider-bar" style="margin-top:1px">
+    <div class="provider-identity">
+      <div class="provider-icon" style="background:#0D1520;border-color:#1E3A5F">
+        <i data-lucide="building-2" style="width:16px;height:16px"></i>
+      </div>
+      <div>
+        <div class="provider-name">Nate B. Jones</div>
+        <div class="provider-platform">Substack · natesnewsletter.substack.com</div>
+      </div>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-label">Tier</div>
+        <div class="meta-value">
+          <span class="tier-badge" style="background:#161A20; color:#94A3B8; border:1px solid #2D3748">
+            ○ free
+          </span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Corpus Start</div>
+        <div class="meta-value">2026-02-12</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Articles</div>
+        <div class="meta-value large" style="color:#94A3B8">12</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Last Ingestion</div>
+        <div class="meta-value" style="color:#94A3B8">2026-03-01</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Gap Window</div>
+        <div class="meta-value">
+          <span class="gap-badge" style="background:#2C1F06; color:#FCD34D; border:1px solid #3A2A10">
+            <i data-lucide="alert-triangle" style="width:10px;height:10px"></i>
+            Feb 12–21 · open
+          </span>
+        </div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Evaluation</div>
+        <div class="meta-value">
+          <span class="tier-badge" style="background:#111418; color:#475569; border:1px solid #1E2530">
+            — none yet
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>lucide.createIcons();</script>
+</html>
