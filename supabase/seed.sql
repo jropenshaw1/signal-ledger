@@ -1,0 +1,1 @@
+-- Signal Ledger: no default seed data (DD v0.3 schema is applied via migrations).
