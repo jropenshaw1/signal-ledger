@@ -46,7 +46,7 @@ SignalLedger serves two jobs from a single corpus:
 
 - **Storage:** pgvector on Supabase — semantic retrieval via HNSW vector index, structured filtering via B-tree indexes on date, provider, and content type
 - **Write path:** Dedicated Signal Ledger MCP (Supabase Edge Function)
-- **Retrieval modes:** Targeted, Inferential, Framing, Audit, Evaluative, Kit Status
+- **Retrieval modes:** Targeted, Inferential (with Framing sub-mode), Audit, Evaluative, Kit Status
 - **Content model:** Articles, Prompt Kits, Evaluation Stamps, Provider Records — each with independent retrieval value and accumulating provenance
 - **Agent:** Claude (sole writer and orchestrator, v1)
 
@@ -54,20 +54,21 @@ SignalLedger serves two jobs from a single corpus:
 
 ## Status
 
-**Governance phase — pre-build.**
+**Implementation phase — governance complete.**
 
-The LENS governance chain is in progress:
+The full LENS governance chain is locked. Seven layers, all traceable, zero orphan criteria. Build is next.
 
-| Layer | Document | Status |
-|---|---|---|
-| 1 | Charter | Locked v0.1 |
-| 2 | Use Case Spec | Locked v0.1 |
-| 3 | Data Dictionary | Locked v0.1 |
-| 4 | Functional Spec | Pending |
-| 5 | ADR Log | Pending |
-| 6 | Definition of Done | Pending |
+| Layer | Document | Version | Status |
+|---|---|---|---|
+| 1 | Charter | v0.2 | LOCKED |
+| 2 | Use Case Spec | v0.2 | LOCKED |
+| 3 | Data Dictionary | v0.3 | LOCKED |
+| 4 | Functional Spec | v1.1 | LOCKED |
+| 5 | Threat Model | v0.1 | LOCKED |
+| 6 | ADR Log | v0.1 | LOCKED |
+| 7 | Definition of Done | v0.1 | LOCKED |
 
-Build begins after Functional Spec lock.
+Governance Addendum v0.1 governs the chain. All artifacts are in `docs/`.
 
 ---
 
@@ -78,13 +79,24 @@ SignalLedger/
 ├── README.md
 ├── .gitignore
 ├── LICENSE
-└── docs/
-    ├── 01_signal-ledger-charter-v0.1.md
-    ├── 02_signal-ledger-use-case-spec-v0.1.md
-    ├── 03_signal-ledger-data-dictionary-v0.1.md
-    └── amendments/
-        └── signal-ledger-pre-functional-spec-amendment-v0.1.md
+├── docs/
+│   ├── 01_signal-ledger-charter-v0_2.md
+│   ├── 02_signal-ledger-use-case-spec-v0_2.md
+│   ├── 03_signal-ledger-data-dictionary-v0_3.md
+│   ├── 04_signal-ledger-functional-spec-v1_1.md
+│   ├── 05_signal-ledger-threat-model-v0_1.md
+│   ├── 06_signal-ledger-adr-log-v0_1.md
+│   ├── 07_signal-ledger-definition-of-done-v0_1.md
+│   ├── lens-governance-addendum-v0_1.md
+│   ├── sl_mcp_tool_signatures_v1.md
+│   └── amendments/
+├── db/
+├── supabase/
+├── legacy/
+└── Design/
 ```
+
+Prior versions (v0.1, v0.2 where superseded) are retained in `docs/` for provenance.
 
 ---
 
