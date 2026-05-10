@@ -287,6 +287,59 @@ The six ADRs in this set originate from the predecessor nate-archiver project's 
 The original Q1–Q6 lock thoughts in OpenBrain remain authoritative for the predecessor project's history; this set is the Signal Ledger record of which decisions still apply and on what terms.
 
 ---
+---
+
+# Set D — Operational-Reality ADR (Post-Lock Addendum)
+## ADR-014 — Embedding Chunking for Oversized Articles
+
+**Status:** Accepted
+**Date:** 2026-05-09
+**Source:** Operational reality — 26 of 287 articles fail embedding with OpenAI API error 400 (maximum context length 8192 tokens exceeded). Root cause: `sl_embed_article` sends full `body_text` as a single embedding input. All 26 articles are Nate's longer-form posts exceeding ~32K characters.
+
+### Context
+
+The v1 embedding pipeline assumes a 1:1 relationship between articles and embedding rows, enforced by the unique constraint `uq_sse_article_model` on `(article_id, model_id)`. This worked for 261 of 287 articles — those short enough to fit within the 8192-token context window of `text-embedding-3-small`. The remaining 26 articles (9% of corpus) are permanently stuck in `embedding_status=failed` because no amount of retrying can fix a 400 error caused by input length.
+
+This is a structural gap, not a transient failure. Nate's longer articles (complete guides, teardowns, multi-section features) routinely run 10K–20K tokens. The problem will recur on every future long article.
+
+### Decision
+
+Split oversized articles into chunks at paragraph boundaries, targeting ~6000 tokens per chunk (27% headroom below the 8192 limit). Each chunk gets its own row in `sl_signpost_embeddings` with a `chunk_index` field. The cardinality of E8 changes from "one row per `(article_id, model_id)` pair" to "one row per `(article_id, chunk_index)` pair."
+
+Specific schema changes:
+
+1. **Drop** unique constraint `uq_sse_article_model` on `(article_id, model_id)` — this blocked multi-chunk inserts.
+2. **Add** column `chunk_index INTEGER NOT NULL DEFAULT 0` — zero-based position of this chunk within the article.
+3. **Add** column `chunk_text TEXT` — the actual text sent to the embedding model for this chunk. Enables re-embedding without re-chunking.
+4. **Add** column `total_chunks INTEGER NOT NULL DEFAULT 1` — denormalized for query convenience.
+5. **Add** unique constraint `uq_sse_article_chunk` on `(article_id, chunk_index)` — replaces the dropped constraint.
+6. **Add** index `idx_sse_article_chunk` on `(article_id, chunk_index)` — supports chunk-aware queries.
+
+The edge function `sl_embed_article` v2 chunks via a new `_shared/text_chunker.ts` module, embeds each chunk sequentially with per-chunk retry (3 attempts, 2s/8s backoff), inserts all rows in a single batch, and uses all-or-nothing rollback — if any chunk fails, all chunks for that article are discarded and `embedding_status` stays `failed`.
+
+### Alternatives Considered
+
+**Client-side bypass (embed directly via OpenAI API, skip edge function).** Rejected. Would unblock the 26 articles immediately but would not create capture events, would bypass the error mapper, and would leave the edge function broken for all future long articles. Tactical fix with recurring technical debt.
+
+**Truncate articles to fit the token limit.** Rejected. Loses content — the tail of long articles often contains the most specific, actionable material (prompt kits, implementation details, frameworks). Semantic search quality would degrade for exactly the articles that matter most.
+
+**Switch to a model with a larger context window (e.g., text-embedding-3-large at 8191 tokens, or a non-OpenAI model).** Rejected for v1. Would require re-embedding the entire corpus (261 articles) for vector-space consistency. Also does not fully solve the problem — Nate's longest articles exceed 20K tokens, which is beyond any current OpenAI embedding model's context window. Chunking is necessary regardless of model choice.
+
+**Store a single averaged/pooled embedding per article (embed chunks, then mean-pool).** Rejected. Mean-pooling discards the positional specificity that makes semantic search useful. A search for "prompt kit for delegation" should match the chunk that contains the delegation prompt kit, not a diluted whole-article vector.
+
+**Use OpenAI's batch embedding API (send all chunks in one request).** Considered but deferred. The batch API has different rate-limit and error semantics. The sequential approach is simpler for v1 and the per-chunk retry logic is already built. Batch optimization is a v1.1 candidate if embedding throughput becomes a bottleneck.
+
+### Consequences
+
+- **E8 cardinality changes.** The Entity Inventory, E8 field table, E-R diagram, and Index Plan in Data Dictionary v0.3 are invalidated. A Data Dictionary v0.4 revision is required (backward-flow correction per G4).
+- **Existing 261 embeddings are unaffected.** They receive `chunk_index=0` and `total_chunks=1` via column defaults. No data migration required.
+- **Semantic search queries must handle multi-chunk articles.** Queries that previously assumed one embedding per article now return multiple rows. Search results should be grouped by `article_id` and the best-matching chunk surfaced. This is a consumer-side change, not a schema change.
+- **`embedding_status` state machine is unchanged.** The lifecycle still terminates at `complete` or `failed`. The definition of `complete` now means "all chunks embedded successfully" rather than "one embedding row exists."
+- **Functional Spec v1.1 § 2 reference to "one row per (article_id, model_id)" is invalidated.** Forward-noted for next FS revision.
+- **OQ-DD-07 (E8 provenance field shape) gains new context.** Provenance now includes per-chunk metadata (`chunk_index`, `total_chunks`, `estimated_tokens`). The field shape question is closer to resolution.
+- **The `text_chunker.ts` module is a new shared dependency.** It has 12 tests and is deterministic (no API calls, no side effects). Chunking parameters (6000-token target, 50-token overlap, paragraph-boundary splitting) are constants in the module, not configurable — they are implementation choices, not architectural decisions.
+
+---
 
 ## ADR-007 — Dispatcher Shape (Predecessor Q1: Lightweight Registry)
 

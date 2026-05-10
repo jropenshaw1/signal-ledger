@@ -1,13 +1,13 @@
-# Signal Ledger — Data Dictionary v0.3
+# Signal Ledger — Data Dictionary v0.4
 
-**Status:** LOCKED — 2026-05-05
-**Version:** v0.3
+**Status:** LOCKED — 2026-05-09
+**Version:** v0.4
 **LENS Chain Position:** Layer 3 of 7
 **Depends On:** Charter v0.2 (LOCKED 2026-05-03), Use Case Spec v0.2 (LOCKED 2026-05-03)
 **Precedes:** Functional Spec v1.1 (LOCKED 2026-05-05)
-**Supersedes:** Data Dictionary v0.2 (LOCKED 2026-05-03)
-**Triggered By:** ADR-013 (rate-limit budget governance for upstream content sources)
-**Tag:** [signal-ledger:data-dictionary-v0.3]
+**Supersedes:** Data Dictionary v0.3 (LOCKED 2026-05-05)
+**Triggered By:** ADR-013 (rate-limit budget governance), ADR-014 (embedding chunking for oversized articles)
+**Tag:** [signal-ledger:data-dictionary-v0.4]
 
 ---
 
@@ -18,8 +18,30 @@ This version applies the backward-flow correction triggered by ADR Log v0.1 (spe
 | Change | Reason |
 |---|---|
 | **New § Upstream Source Properties** added between § Storage Architecture and § Entity Inventory | ADR-013 anticipates this section explicitly. Source properties are factual descriptions of upstream content sources (rate limits, auth model, endpoint shape, pagination, content types served) — distinct from the architectural decision to govern rate limits at the adapter layer, which is recorded in ADR-013. |
-| Tag updated to `[signal-ledger:data-dictionary-v0.3]` | New version, new tag per handoff convention |
+| Tag updated to `[signal-ledger:data-dictionary-v0.4]` | New version, new tag per handoff convention |
 
+## Changes from v0.3
+
+This version applies the backward-flow correction triggered by ADR-014 per LENS Governance Addendum v0.1 principle G4. The correction modifies E8 (Signpost Embedding) to support multi-chunk embeddings for articles exceeding the embedding model's 8192-token context window.
+
+| Change | Reason |
+|---|---|
+| **E8 entity description updated** — cardinality changed from "one row per (article_id, model_id)" to "one or more rows per article, one per chunk" | ADR-014: 26 articles exceed 8192-token limit; chunking required |
+| **E8 field table updated** — three new columns: `chunk_index`, `chunk_text`, `total_chunks` | ADR-014: chunk metadata for multi-chunk embedding storage |
+| **E8 unique constraint changed** — `uq_sse_article_model` on `(article_id, model_id)` dropped; `uq_sse_article_chunk` on `(article_id, chunk_index)` added | ADR-014: old constraint blocked multi-chunk inserts |
+| **Entity Inventory E8 row updated** — constraint description updated | Reflects new unique constraint |
+| **Index Plan updated** — `(article_id, model_id)` unique B-tree replaced with `(article_id, chunk_index)` | Reflects new idempotency enforcement shape |
+| **E-R diagram updated** — E8 entity gains three fields | Schema additive change |
+| **OQ-DD-07 updated** — provenance field shape gains new context from chunking metadata | ADR-014 consequence |
+
+### Not changed in v0.4
+
+- No new entities. Chunking is a structural change to E8, not a new entity.
+- No vocabulary corrections.
+- No state machine changes. `embedding_status` lifecycle is unchanged; `complete` now means "all chunks embedded" rather than "one row exists."
+- No changes to E1–E7 or Upstream Source Properties.
+
+---
 ### Not changed in v0.3
 
 - No new entities. ADR-013 anticipates persistent budget state but defers the schema shape to Functional Spec v1.1 / implementation. No `sl_api_call_ledger` table, no `budget_state` field on existing entities, no JSONB additions for budget tracking. v0.3 documents source-side facts only.
@@ -114,7 +136,7 @@ Each new source authored adds one sub-section here at the time the corresponding
 | E5 | Evaluative Session | `sl_evaluative_sessions` | Accumulating record | FK → E4. Never overwritten. |
 | E6 | Gap Window | Embedded in `sl_provider_records.gap_windows` | JSONB array | Sub-record of E4 |
 | E7 | Capture Event | `sl_capture_events` | Append-only audit trail | FK → E1 (nullable for pre-article failures), FK → E4. Never updated, never deleted. |
-| E8 | Signpost Embedding | `sl_signpost_embeddings` | Vector storage | FK → E1. Unique constraint on `(article_id, model_id)`. |
+| E8 | Signpost Embedding | `sl_signpost_embeddings` | Vector storage | FK → E1. One or more rows per article (one per chunk). Unique constraint on `(article_id, chunk_index)`. |
 
 ---
 
@@ -208,6 +230,9 @@ erDiagram
         uuid article_id FK
         string model_id
         vector embedding "1536d"
+        int chunk_index
+        text chunk_text
+        int total_chunks
         timestamptz created_at
         jsonb provenance
     }
@@ -240,7 +265,7 @@ erDiagram
 **Cardinality notes:**
 - `sl_provider_records` 1 : N `sl_articles` — one provider has many articles.
 - `sl_articles` 1 : N `sl_prompt_kits` — one article may yield many kits (most yield zero).
-- `sl_articles` 1 : N `sl_signpost_embeddings` — one article has at most one embedding per `model_id`. v1 ships with one model, so cardinality is effectively 1 : 1 in practice; the schema permits multi-model storage for future migration without rework.
+- `sl_articles` 1 : N `sl_signpost_embeddings` — one article has one or more embedding rows (one per text chunk). Short articles produce a single row (`chunk_index=0`); articles exceeding the embedding model's 8192-token context window are split into multiple chunks per ADR-014. Unique constraint on `(article_id, chunk_index)`.
 - `sl_articles` 1 : N `sl_capture_events` — one article has many events across its ingestion lifecycle.
 - `sl_capture_events` self-reference via `retry_of_event_id` — strict chain, traceable back to `ingestion_started`.
 - JSONB sub-records (`gap_windows`, `cited_claims`, `structured_technical_content`) are arrays embedded in their parent rows — not separate tables. Diagrammed for clarity, not as separate relations.
@@ -397,21 +422,30 @@ erDiagram
 
 ## E8 — SIGNPOST EMBEDDING (`sl_signpost_embeddings`)
 
-*Vector storage. One row per `(article_id, model_id)` pair. Per Functional Spec § 2.*
+*Vector storage. One or more rows per article — one row per text chunk. Articles within the embedding model's context window produce a single row (chunk_index=0). Articles exceeding the context window are split at paragraph boundaries into multiple chunks, each with its own embedding row. Per Functional Spec § 2 and ADR-014.*
 
 | Field | Type | Required | Valid Values / Format | Description | Source |
 |---|---|---|---|---|---|
 | `embedding_id` | UUID | ✅ | System-generated | Stable identifier | A2 |
 | `article_id` | UUID (FK → E1) | ✅ | Must match existing Article record | Article this embedding represents | A2 |
 | `model_id` | String | ✅ | `text-embedding-3-small` (v1 lock) | Embedding model identifier. String literal in v1; promotable to FK reference if a model registry table is added in a future version. | A2 |
-| `embedding` | vector(1536) | ✅ | pgvector format, 1536 dimensions | Semantic embedding of body_text (or title + excerpt for `preview-only` articles, per Functional Spec § 2 model lock). | A2 |
+| `embedding` | vector(1536) | ✅ | pgvector format, 1536 dimensions | Semantic embedding of this chunk's text content. | A2 |
+| `chunk_index` | Integer | ✅ | ≥ 0. Default: 0 | Zero-based index of this chunk within the article. 0 for single-chunk articles. | A2 |
+| `chunk_text` | Text | ❌ | Free text or null | The actual text sent to the embedding model for this chunk. Enables re-embedding without re-chunking and provenance inspection. Null for embeddings created before v0.4 (pre-chunking). | A2 |
+| `total_chunks` | Integer | ✅ | ≥ 1. Default: 1 | Total number of chunks for this article. Denormalized for query convenience — avoids COUNT(*) on every read. | A2 |
 | `created_at` | Timestamptz | ✅ | ISO 8601 UTC | When the embedding row was written | A2 |
-| `provenance` | JSONB | ✅ | Object containing model API metadata | Per Functional Spec § 2: provenance metadata written on every embedding row. Recommended fields: `model_version`, `api_response_id`, `input_token_count`. Required as non-null; specific shape evolves with provider responses. | A2 |
+| `provenance` | JSONB | ✅ | Object containing model API metadata | Per Functional Spec § 2: provenance metadata written on every embedding row. Fields: `model_version`, `input_token_count`, `total_tokens`. For multi-chunk articles, also includes `chunk_index`, `total_chunks`, `estimated_tokens`. Required as non-null; specific shape evolves with provider responses. | A2 |
 
 **Constraints:**
-- **Unique on `(article_id, model_id)`** — duplicate embedding writes blocked at DB level per Functional Spec § 2 idempotency model. Application layer checks before write; DB constraint is the authoritative backstop.
+- **Unique on `(article_id, chunk_index)`** — one embedding per chunk per article. Replaces the v0.3 constraint `uq_sse_article_model` on `(article_id, model_id)` which blocked multi-chunk inserts (ADR-014).
 
-**Forward compatibility:** v1 ships with one model; the schema permits multi-model embedding storage without migration. Adding a second model is additive — new rows under the new `model_id` value.
+**Chunking behavior (per ADR-014):**
+- Articles within ~6000 tokens (~24000 characters) produce a single row with `chunk_index=0`, `total_chunks=1`.
+- Articles exceeding this threshold are split at paragraph boundaries. Each chunk targets ~6000 tokens with ~50-token overlap between adjacent chunks for semantic search continuity.
+- Embedding is all-or-nothing per article: if any chunk fails after 3 retry attempts, all chunks for that article are discarded and `embedding_status` stays `failed`.
+- On re-embedding (retry of a failed article), existing rows for that article are deleted before new chunks are inserted.
+
+**Forward compatibility:** v1 ships with one model; the schema permits multi-model embedding storage without migration. Adding a second model is additive — new rows under the new `model_id` value. Multi-model + multi-chunk requires a unique constraint on `(article_id, model_id, chunk_index)` — not present in v0.4 because v1 has one model.
 
 ---
 
@@ -473,7 +507,7 @@ stateDiagram-v2
 | `sl_capture_events` | `article_id, created_at` | Composite B-tree | Per-article timeline reconstruction |
 | `sl_capture_events` | `event_type, created_at` | Composite B-tree | Observability metrics scans |
 | `sl_capture_events` | `retry_of_event_id` | B-tree | Retry chain traversal |
-| `sl_signpost_embeddings` | `article_id, model_id` | Unique B-tree | Idempotency enforcement (Functional Spec § 2) |
+| `sl_signpost_embeddings` | `article_id, chunk_index` | Unique B-tree | Idempotency enforcement — one embedding per chunk per article (ADR-014) |
 | `sl_signpost_embeddings` | `embedding` | HNSW (pgvector) | All semantic retrieval modes |
 
 ---
@@ -488,17 +522,17 @@ stateDiagram-v2
 | OQ-DD-04 | `article_count` maintenance pattern | **Closed** (v0.2) — native Postgres UPDATE on each ingestion |
 | OQ-DD-05 | Write path selection | **Closed** (v0.2) — dedicated Signal Ledger MCP |
 | OQ-DD-06 | E7 `metadata` field shape — schema-constrained or free-form | **Open** — defer until observability instrumentation reveals consistent fields |
-| OQ-DD-07 | E8 `provenance` field shape — typed sub-record | **Open** — defer until first production use surfaces what the embedding API returns at scale |
+| OQ-DD-07 | E8 `provenance` field shape — typed sub-record | **Narrowing** — ADR-014 chunking adds `chunk_index`, `total_chunks`, `estimated_tokens` to provenance alongside existing `model_version`, `input_token_count`, `total_tokens`. Shape is stabilizing; consider closing at next DD revision if no further fields emerge. |
 
-No new open questions in v0.3. Budget state persistence — anticipated by ADR-013 — is deferred to Functional Spec v1.1 / implementation per session 6 prep decision (2026-05-05). It is not raised as a DD-level OQ because the decision to defer was the resolution.
+No new open questions in v0.4. OQ-DD-07 status updated from Open to Narrowing per ADR-014 consequences. Budget state persistence — anticipated by ADR-013 — is deferred to Functional Spec v1.1 / implementation per session 6 prep decision (2026-05-05). It is not raised as a DD-level OQ because the decision to defer was the resolution.
 
 ---
 
 ## Tag
 
-`[signal-ledger:data-dictionary-v0.3]`
+`[signal-ledger:data-dictionary-v0.4]`
 
 ---
 
-*Signal Ledger Data Dictionary v0.3 — LOCKED 2026-05-05. Supersedes v0.2.*
-*Backward-flow correction per LENS Governance Addendum v0.1 principle G4. Triggered by ADR-013 (rate-limit budget governance for upstream content sources). Additive only — one new section (Upstream Source Properties); no schema, vocabulary, state machine, or index changes from v0.2.*
+*Signal Ledger Data Dictionary v0.4 — LOCKED 2026-05-09. Supersedes v0.3.*
+*Backward-flow correction per LENS Governance Addendum v0.1 principle G4. Triggered by ADR-014 (embedding chunking for oversized articles). Schema changes to E8 (Signpost Embedding): three new columns, constraint replacement, index update.*
