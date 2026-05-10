@@ -104,10 +104,11 @@ function validateInput(body: unknown): ValidationResult {
   return { valid: errors.length === 0, errors };
 }
 
-function inferContentType(source: string): ContentType {
-  return source === 'email-backfill'
-    ? 'Nate-executive-briefing'
-    : 'Nate-feature-article';
+function inferContentType(_source: string, content_type?: string | null): ContentType {
+  if (content_type === 'article' || content_type === 'prompt_kit') {
+    return content_type as ContentType;
+  }
+  return 'article' as ContentType;
 }
 
 async function deriveExternalId(
@@ -206,7 +207,10 @@ async function ingestArticle(input: IngestArticleInput): Promise<Response> {
   const completeness   = cp.capture_completeness as CaptureCompleteness;
   const body_text      = cp.body_text ?? null;
   const message_id     = cp.message_id ?? null;
-  const content_type   = inferContentType(input.ingestion_source);
+  const content_type = inferContentType(
+    input.ingestion_source,
+    (input as IngestArticleInput & { content_type?: string }).content_type,
+  );
 
   const external_id = await deriveExternalId(
     input.provider_id,
