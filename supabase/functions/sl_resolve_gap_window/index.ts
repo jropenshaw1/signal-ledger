@@ -4,6 +4,7 @@
 // Functional Spec v1.1 §7 — gap JSON optimistic mutation + capture events (DD v0.3).
 // =============================================================================
 
+import { verifyApiKey, unauthorizedResponse } from '../_shared/auth.ts';
 import { writeCaptureEvent }              from '../_shared/capture_events.ts';
 import { resolveGapWindow }               from '../_shared/gap_windows.ts';
 import { successResponse, errorResponse } from '../_shared/response.ts';
@@ -18,7 +19,7 @@ import type { ErrorCode } from '../_shared/types.ts';
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey',
 };
 
 interface ValidationResult {
@@ -149,6 +150,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
       JSON.stringify({ error: 'Method not allowed — POST only' }),
       { status: 405, headers: { 'Content-Type': 'application/json' } },
     );
+  }
+
+  if (!verifyApiKey(req)) {
+    return unauthorizedResponse();
   }
 
   let body: unknown;

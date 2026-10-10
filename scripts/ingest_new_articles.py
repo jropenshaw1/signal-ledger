@@ -3,13 +3,14 @@
 ingest_new_articles.py — Fetch new EC articles and ingest into Signal Ledger.
 
 Run from anywhere with Python 3.8+:
-  python ingest_new_articles.py
+  SUPABASE_SERVICE_ROLE_KEY=<key> python ingest_new_articles.py
 
 Requires: requests (pip install requests)
 """
 
 import json
 import hashlib
+import os
 import time
 import sys
 from datetime import datetime, timezone
@@ -20,11 +21,16 @@ except ImportError:
     print("pip install requests")
     sys.exit(1)
 
-# --- Configuration ---
-SB_URL = "https://blreixaevpbmhbhyqgbq.supabase.co"
-SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJscmVpeGFldnBibWhiaHlxZ2JxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjQ5NzkxNywiZXhwIjoyMDg4MDczOTE3fQ.JtnCoMPnlnFhUJYi3CK1OmQju9DKplUc5QrJs8aQsl4"
-EC_MCP_URL = "https://www.contentmasterpro.limited/api/mcp/subscriber/exc__eAIcubn2KJbnQXHyptXOHMGb3VTltryJ"
-PROVIDER_ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+# --- Configuration (from environment) ---
+SB_URL = os.environ.get("SUPABASE_URL", "https://blreixaevpbmhbhyqgbq.supabase.co")
+SB_KEY = os.environ.get("OB_SUPABASE_SECRET", "") or os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+EC_MCP_URL = os.environ.get("EC_MCP_URL", "")
+PROVIDER_ID = os.environ.get("SIGNAL_LEDGER_PROVIDER_ID", "f47ac10b-58cc-4372-a567-0e02b2c3d479")
+
+if not SB_KEY:
+    print("ERROR: OB_SUPABASE_SECRET (or SUPABASE_SERVICE_ROLE_KEY) must be set.")
+    print("  export OB_SUPABASE_SECRET=<your-sb_secret-key>")
+    sys.exit(1)
 
 ARTICLES = [
     {
@@ -46,7 +52,6 @@ ARTICLES = [
 
 SB_HEADERS = {
     "apikey": SB_KEY,
-    "Authorization": f"Bearer {SB_KEY}",
     "Content-Type": "application/json",
 }
 
@@ -130,7 +135,7 @@ def embed_article(article_id: str) -> dict:
     resp = requests.post(
         f"{SB_URL}/functions/v1/sl_embed_article",
         json={"article_id": article_id},
-        headers={"Authorization": f"Bearer {SB_KEY}", "Content-Type": "application/json"},
+        headers={"apikey": SB_KEY, "Content-Type": "application/json"},
         timeout=120,
     )
     return resp.json()

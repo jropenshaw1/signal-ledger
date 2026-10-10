@@ -12,6 +12,7 @@
 // Invocation: POST { query: string, filters?: object, limit?: number }
 // =============================================================================
 
+import { verifyApiKey, unauthorizedResponse } from '../_shared/auth.ts';
 import { generateEmbedding } from '../_shared/embedding_client.ts';
 import { getServiceClient }  from '../_shared/supabase.ts';
 
@@ -23,7 +24,7 @@ function vectorToPgString(v: number[]): string {
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey',
 };
 
 // ---------------------------------------------------------------------------
@@ -112,6 +113,10 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({ success: false, error: 'Method not allowed' }),
       { status: 405, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } },
     );
+  }
+
+  if (!verifyApiKey(req)) {
+    return unauthorizedResponse();
   }
 
   try {

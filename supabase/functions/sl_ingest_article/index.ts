@@ -10,6 +10,7 @@
 // Deferred: ingestion_source = web (fetch-from-URL ingestion).
 // =============================================================================
 
+import { verifyApiKey, unauthorizedResponse }         from '../_shared/auth.ts';
 import { writeCaptureEvent }                          from '../_shared/capture_events.ts';
 import { resolveGapWindow }                           from '../_shared/gap_windows.ts';
 import { mapErrorToCode, buildErrorMessage }           from '../_shared/error_mapper.ts';
@@ -29,7 +30,7 @@ import type {
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey',
 };
 
 // ---------------------------------------------------------------------------
@@ -390,6 +391,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
       JSON.stringify({ error: 'Method not allowed — POST only' }),
       { status: 405, headers: { 'Content-Type': 'application/json' } },
     );
+  }
+
+  if (!verifyApiKey(req)) {
+    return unauthorizedResponse();
   }
 
   let body: unknown;

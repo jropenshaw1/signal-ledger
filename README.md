@@ -1,3 +1,7 @@
+> **RETIRED 2026-10-09.** Signal Ledger is no longer in use; its role is covered by Nate's Library MCP server.
+> The `sl_*` edge functions have been deleted. The `sl_*` database tables and data are retained as an archive.
+> This repository is archived and read-only. Credentials that appear in its history are revoked or retired.
+
 # SignalLedger
 
 Most content systems are built for humans to browse. SignalLedger is built for agents to retrieve.

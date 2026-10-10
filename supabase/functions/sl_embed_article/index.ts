@@ -15,6 +15,7 @@
 // Invocation: POST { article_id: uuid }
 // =============================================================================
 
+import { verifyApiKey, unauthorizedResponse }  from '../_shared/auth.ts';
 import { writeCaptureEvent }                   from '../_shared/capture_events.ts';
 import {
   generateEmbedding,
@@ -34,7 +35,7 @@ const MODEL_ID      = () => getEmbeddingModel();
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey',
 };
 
 function validateInput(body: unknown): { valid: boolean; article_id?: string; error?: string } {
@@ -415,6 +416,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
       JSON.stringify({ error: 'Method not allowed — POST only' }),
       { status: 405, headers: { 'Content-Type': 'application/json' } },
     );
+  }
+
+  if (!verifyApiKey(req)) {
+    return unauthorizedResponse();
   }
 
   let body: unknown;
